@@ -279,9 +279,13 @@ const CustomDataTable = registerComponent('custom data table', {
       props.pageSource
     );
 
-    const alias = columnAlias?.split(',').map((e: String) => {
-      const [key, value] = e.split(':');
-      return { key, value };
+    const alias: any = [];
+
+    columnAlias?.split(',').forEach((e: String) => {
+      if (e.includes(':')) {
+        const [key, value] = e.split(':');
+        alias.push({ key, value });
+      }
     });
 
     const ignoredColumns = [
