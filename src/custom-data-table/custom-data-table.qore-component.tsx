@@ -37,6 +37,7 @@ const CustomDataTable = registerComponent('custom data table', {
     userId: '',
     platformType: 'admin',
     ignoreColumns: '',
+    columnAlias: '',
     onInsertAction: [{ type: 'none' }],
     onRowClickAction: [{ type: 'none' }],
     onEditAction: [{ type: 'none' }],
@@ -57,6 +58,7 @@ const CustomDataTable = registerComponent('custom data table', {
       },
     },
     ignoreColumns: { group: 'Text', type: 'expression', options: {} },
+    columnAlias: { group: 'Text', type: 'expression', options: {} },
     onInsertAction: {
       group: 'On Insert',
       label: 'On Insert',
@@ -91,8 +93,13 @@ const CustomDataTable = registerComponent('custom data table', {
 
   Component: (props: any) => {
     const source = props.source.target;
-    const { title, userId, ignoreColumns, platformType } =
-      props.properties;
+    const {
+      title,
+      userId,
+      ignoreColumns,
+      columnAlias,
+      platformType,
+    } = props.properties;
     const tableRowData = props.data.component?.rows;
 
     const insertAction = props.hooks.useActionTrigger(
@@ -272,6 +279,11 @@ const CustomDataTable = registerComponent('custom data table', {
       props.pageSource
     );
 
+    const alias = columnAlias?.split(',').map((e: String) => {
+      const [key, value] = e.split(':');
+      return { key, value };
+    });
+
     const ignoredColumns = [
       'edit_action',
       'print_action',
@@ -318,7 +330,12 @@ const CustomDataTable = registerComponent('custom data table', {
       ? Object.keys(tableData[0]).forEach((key) => {
           if (!ignoredColumns.includes(key)) {
             columns.push({
-              name: key.replace(/_/g, ' ').toUpperCase(),
+              name:
+                alias
+                  ?.find((e: any) => e.key === key)
+                  ?.value.trim()
+                  .toUpperCase() ||
+                key.replace(/_/g, ' ').toUpperCase(),
               //@ts-ignore
               selector: (row: any) => row[key],
               sortable: true,
@@ -351,8 +368,8 @@ const CustomDataTable = registerComponent('custom data table', {
         {selectedRow.length > 0 &&
           ActionMenuComponent({
             platformType,
-            actionPrintLabels,
-            actionCreateInvoices,
+            actionPrintLabel: actionPrintLabels,
+            actionCreateInvoice: actionCreateInvoices,
           })}
       </div>
     );
