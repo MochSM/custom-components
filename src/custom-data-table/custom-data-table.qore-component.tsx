@@ -2,12 +2,8 @@ import React from 'react';
 import { registerComponent } from '@qorebase/app-cli';
 import DataTable from 'react-data-table-component';
 import {
-  Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
   Button,
-  Portal,
   InputGroup,
   Input,
   InputRightElement,
@@ -15,6 +11,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { ActionMenuComponent } from './components/action-menu-component';
 
 type MyShipment = {
   id: string;
@@ -39,6 +36,7 @@ const CustomDataTable = registerComponent('custom data table', {
   defaultProps: {
     userId: '',
     platformType: 'admin',
+    ignoreColumns: '',
     onInsertAction: [{ type: 'none' }],
     onRowClickAction: [{ type: 'none' }],
     onEditAction: [{ type: 'none' }],
@@ -58,6 +56,7 @@ const CustomDataTable = registerComponent('custom data table', {
         ],
       },
     },
+    ignoreColumns: { group: 'Text', type: 'expression', options: {} },
     onInsertAction: {
       group: 'On Insert',
       label: 'On Insert',
@@ -92,9 +91,8 @@ const CustomDataTable = registerComponent('custom data table', {
 
   Component: (props: any) => {
     const source = props.source.target;
-    const title = props.properties.title;
-    const userId = props.properties.userId;
-    const platformType = props.properties.platformType;
+    const { title, userId, ignoreColumns, platformType } =
+      props.properties;
     const tableRowData = props.data.component?.rows;
 
     const insertAction = props.hooks.useActionTrigger(
@@ -274,107 +272,43 @@ const CustomDataTable = registerComponent('custom data table', {
       props.pageSource
     );
 
-    const ignoreColumns = [
-      'id',
+    const ignoredColumns = [
       'edit_action',
       'print_action',
       'create_invoice_action',
       'on_row_click_action',
+      ...ignoreColumns?.split(',').map((e: String) => e.trim()),
     ];
 
     const columns = [
       {
         name: 'ACTIONS',
-        cell: (row: MyShipment) => (
-          <Menu>
-            <MenuButton color="gray.500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                className="feather feather-more-vertical"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="12" cy="5" r="1"></circle>
-                <circle cx="12" cy="19" r="1"></circle>
-              </svg>
-            </MenuButton>
-            <Portal>
-              <MenuList>
-                <MenuItem onClick={row.edit_action}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="feather feather-edit"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  &nbsp;Edit
-                </MenuItem>
-                <MenuItem onClick={row.print_action}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="feather feather-printer"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M6 9L6 2 18 2 18 9"></path>
-                    <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
-                    <path d="M6 14H18V22H6z"></path>
-                  </svg>
-                  &nbsp;Print Label
-                </MenuItem>
-                {platformType === 'admin' && (
-                  <MenuItem onClick={row.create_invoice_action}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="feather feather-clipboard"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path>
-                      <rect
-                        width="8"
-                        height="4"
-                        x="8"
-                        y="2"
-                        rx="1"
-                        ry="1"
-                      ></rect>
-                    </svg>
-                    &nbsp;Create Invoice
-                  </MenuItem>
-                )}
-              </MenuList>
-            </Portal>
-          </Menu>
-        ),
+        cell: (row: MyShipment) =>
+          ActionMenuComponent({
+            menuButton: (
+              <MenuButton color="gray.500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  className="feather feather-more-vertical"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </MenuButton>
+            ),
+            actionEdit: row.edit_action,
+            actionPrintLabel: row.print_action,
+            actionCreateInvoice: row.create_invoice_action,
+          }),
         allowOverflow: true,
         button: true,
       },
@@ -382,7 +316,7 @@ const CustomDataTable = registerComponent('custom data table', {
 
     tableData[0]
       ? Object.keys(tableData[0]).forEach((key) => {
-          if (!ignoreColumns.includes(key)) {
+          if (!ignoredColumns.includes(key)) {
             columns.push({
               name: key.replace(/_/g, ' ').toUpperCase(),
               //@ts-ignore
@@ -414,61 +348,12 @@ const CustomDataTable = registerComponent('custom data table', {
         />
         <br />
 
-        {selectedRow.length > 0 && (
-          <Menu>
-            <MenuButton as={Button} size="sm">
-              Action
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={actionPrintLabels}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="feather feather-printer"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M6 9L6 2 18 2 18 9"></path>
-                  <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
-                  <path d="M6 14H18V22H6z"></path>
-                </svg>
-                &nbsp;Print Label
-              </MenuItem>
-              {platformType === 'admin' && (
-                <MenuItem onClick={actionCreateInvoices}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="feather feather-clipboard"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path>
-                    <rect
-                      width="8"
-                      height="4"
-                      x="8"
-                      y="2"
-                      rx="1"
-                      ry="1"
-                    ></rect>
-                  </svg>
-                  &nbsp;Create Invoice
-                </MenuItem>
-              )}
-            </MenuList>
-          </Menu>
-        )}
+        {selectedRow.length > 0 &&
+          ActionMenuComponent({
+            platformType,
+            actionPrintLabels,
+            actionCreateInvoices,
+          })}
       </div>
     );
   },
