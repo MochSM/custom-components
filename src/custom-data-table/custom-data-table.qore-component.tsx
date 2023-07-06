@@ -165,12 +165,19 @@ const CustomDataTable = registerComponent('custom data table', {
       MyShipment[]
     >([]);
 
+    const ignoreColumnsArray = ignoreColumns
+      ?.split(',')
+      .map((e: String) => e.trim());
+
     const filteredItems = tableData.filter((item) => {
       const filter = filterText.toLowerCase();
-      return Object.values(item).some(
-        (value) =>
-          value && value.toString().toLowerCase().includes(filter)
-      );
+      return Object.entries(item)
+        .filter(([key]) => !ignoreColumnsArray.includes(key))
+        .map(([_, value]) => value)
+        .some(
+          (value) =>
+            value && value.toString().toLowerCase().includes(filter)
+        );
     });
 
     const subHeaderComponentMemo = React.useMemo(() => {
@@ -293,7 +300,7 @@ const CustomDataTable = registerComponent('custom data table', {
       'print_action',
       'create_invoice_action',
       'on_row_click_action',
-      ...ignoreColumns?.split(',').map((e: String) => e.trim()),
+      ...ignoreColumnsArray,
     ];
 
     const columns = [
