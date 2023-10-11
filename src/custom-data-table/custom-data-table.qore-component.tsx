@@ -36,11 +36,14 @@ const CustomDataTable = registerComponent('custom data table', {
   defaultProps: {
     userId: '',
     platformType: 'admin',
+    mode: 'normal',
     ignoreColumns: '',
     columnAlias: '',
     onInsertAction: [{ type: 'none' }],
-    onRowClickAction: [{ type: 'none' }],
-    onEditAction: [{ type: 'none' }],
+    detailPage: '',
+    editPage: '',
+    // onRowClickAction: [{ type: 'none' }],
+    // onEditAction: [{ type: 'none' }],
     printAction: [{ type: 'none' }],
     createInvoiceAction: [{ type: 'none' }],
   },
@@ -57,6 +60,17 @@ const CustomDataTable = registerComponent('custom data table', {
         ],
       },
     },
+    mode: {
+      group: 'Text',
+      type: 'string',
+      options: {
+        format: 'select',
+        options: [
+          { label: 'Normal', value: 'normal' },
+          { label: 'Scan', value: 'scan' },
+        ],
+      },
+    },
     ignoreColumns: { group: 'Text', type: 'expression', options: {} },
     columnAlias: { group: 'Text', type: 'expression', options: {} },
     onInsertAction: {
@@ -65,18 +79,20 @@ const CustomDataTable = registerComponent('custom data table', {
       type: 'action',
       options: [{ type: 'none' }],
     },
-    onRowClickAction: {
-      group: 'On Click',
-      label: 'Row On Click',
-      type: 'action',
-      options: [{ type: 'none' }],
-    },
-    onEditAction: {
-      group: 'On Edit',
-      label: 'On Edit',
-      type: 'action',
-      options: [{ type: 'none' }],
-    },
+    detailPage: { group: 'Text', type: 'expression', options: {} },
+    editPage: { group: 'Text', type: 'expression', options: {} },
+    // onRowClickAction: {
+    //   group: 'On Click',
+    //   label: 'Row On Click',
+    //   type: 'action',
+    //   options: [{ type: 'none' }],
+    // },
+    // onEditAction: {
+    //   group: 'On Edit',
+    //   label: 'On Edit',
+    //   type: 'action',
+    //   options: [{ type: 'none' }],
+    // },
     printAction: {
       group: 'Print',
       label: 'Print',
@@ -92,6 +108,31 @@ const CustomDataTable = registerComponent('custom data table', {
   },
 
   Component: (props: any) => {
+    // const { clickedRow, handleRowClick } = useRowClick();
+    const [clickedRow, setClickedRow] = React.useState<any>(null);
+    const onClickedRow = props.hooks.useActionTrigger(
+      // props.properties.onEditAction,
+      [
+        {
+          pageID: props.properties.detailPage,
+          rowID: `${clickedRow?.id}`,
+          type: 'jump_to_page',
+          params: {
+            rowId: `${clickedRow?.id}`,
+          },
+          allowBackNavigation: true,
+        },
+      ],
+      props.row,
+      props.pageSource
+    );
+
+    React.useEffect(() => {
+      if (clickedRow) {
+        onClickedRow.handleClick();
+      }
+    }, [clickedRow]);
+
     const source = props.source.target;
     const {
       title,
@@ -99,17 +140,12 @@ const CustomDataTable = registerComponent('custom data table', {
       ignoreColumns,
       columnAlias,
       platformType,
+      mode,
     } = props.properties;
     const tableRowData = props.data.component?.rows;
 
     const insertAction = props.hooks.useActionTrigger(
       props.properties.onInsertAction,
-      props.data.page.row,
-      props.pageSource
-    );
-
-    const onEditAction = props.hooks.useActionTrigger(
-      props.properties.onEditAction,
       props.data.page.row,
       props.pageSource
     );
@@ -126,11 +162,11 @@ const CustomDataTable = registerComponent('custom data table', {
       props.pageSource
     );
 
-    const onRowClickAction = props.hooks.useActionTrigger(
-      props.properties.onRowClickAction,
-      props.data.page.row,
-      props.pageSource
-    );
+    // const onRowClickAction = props.hooks.useActionTrigger(
+    //   props.properties.onRowClickAction,
+    //   props.data.page.row,
+    //   props.pageSource
+    // );
 
     const [tableData, setTableData] = React.useState<MyShipment[]>(
       []
@@ -141,18 +177,15 @@ const CustomDataTable = registerComponent('custom data table', {
       setTableData(
         tableRowData.map((row: any) => ({
           ...row,
-          edit_action: () => {
-            onEditAction.handleClick();
-          },
           print_action: () => {
             printAction.handleClick();
           },
           create_invoice_action: () => {
             createInvoiceAction.handleClick();
           },
-          on_row_click_action: () => {
-            onRowClickAction.handleClick();
-          },
+          // on_row_click_action: (id: any) => {
+          //   onRowClickAction.handleClick();
+          // },
         }))
       );
     }, [tableRowData, source]);
@@ -165,20 +198,104 @@ const CustomDataTable = registerComponent('custom data table', {
       MyShipment[]
     >([]);
 
+    // React.useEffect(() => {
+    //   // Use the fetch function to make a GET request to the API
+    //   fetch('https://jsonplaceholder.typicode.com/todos/1')
+    //     .then((response) => response.json())
+    //     .then((json) => console.log(json));
+    // }, []);
+
+    // ? : when filter text updated, add comma.
+    if (mode === 'scan') {
+      React.useEffect(() => {
+        // Create a timeout to add a comma after 1 second of inactivity
+        // const sliceSearch = setTimeout(() => {
+        if (filterText && filterText.slice(-1) !== ',') {
+          setFilterText(
+            (prevInputText: any) =>
+              prevInputText.replace(/ /g, '') + ','
+          );
+        }
+        // }, 500);
+
+        // Clean up the timeout when the component unmounts or when inputText changes
+        // return () => {
+        //   clearTimeout(sliceSearch);
+        // };
+      }, [filterText]);
+    }
+
     const ignoreColumnsArray = ignoreColumns
       ?.split(',')
       .map((e: String) => e.trim());
 
     const filteredItems = tableData.filter((item) => {
-      const filter = filterText.toLowerCase();
+      const filterTextArray = filterText
+        .split(',')
+        .map((filter) => filter.trim().toLowerCase())
+        .filter((filter) => filter !== '');
       return Object.entries(item)
         .filter(([key]) => !ignoreColumnsArray.includes(key))
         .map(([_, value]) => value)
         .some(
           (value) =>
-            value && value.toString().toLowerCase().includes(filter)
+            value &&
+            filterTextArray.some((filter) =>
+              value.toString().toLowerCase().includes(filter)
+            )
         );
     });
+
+    if (mode === 'scan' && filteredItems.length) {
+      const lastFilterText = filterText.split(',').pop();
+
+      const lastItem = filteredItems.filter((item) => {
+        // @ts-ignore
+        return item.shipment_tracking_id === lastFilterText?.trim();
+      })[0];
+
+      if (lastItem) {
+        //@ts-ignore
+        fetch(lastItem.fedex_label, {
+          headers: {
+            'Content-Disposition': 'inline',
+          },
+        })
+          .then((response) => response.blob())
+          .then((blob) => {
+            // Create a Blob URL from the fetched blob
+            const blobURL = URL.createObjectURL(blob);
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const dataURI = reader.result as string;
+              const newDataURI = dataURI
+                .split(';')
+                .map((e, i) => {
+                  if (i === 0) {
+                    return 'data:application/pdf';
+                  }
+                  return e;
+                })
+                .join(';');
+              const newWindow = window.open('', '_blank');
+              if (newWindow) {
+                newWindow.document.title = `${lastFilterText}`;
+                newWindow.location.href = newDataURI;
+                const embedElement = document.createElement('embed');
+                embedElement.width = '100%';
+                embedElement.height = '100%';
+                embedElement.src = newDataURI;
+                embedElement.type = 'application/pdf';
+                newWindow.document.body.appendChild(embedElement);
+              }
+
+              URL.revokeObjectURL(blobURL);
+            };
+            reader.readAsDataURL(blob);
+          });
+      }
+    }
 
     const subHeaderComponentMemo = React.useMemo(() => {
       const handleClear = () => {
@@ -238,7 +355,11 @@ const CustomDataTable = registerComponent('custom data table', {
           },
           onFail: { type: 'none' },
           payload: {
-            data: JSON.stringify(selectedRow.map((e) => e.id)),
+            data: JSON.stringify({
+              args: {
+                data: selectedRow.map((e) => e.id),
+              },
+            }),
           },
           showNotification: false,
           type: 'trigger_action',
@@ -268,7 +389,11 @@ const CustomDataTable = registerComponent('custom data table', {
           },
           onFail: { type: 'none' },
           payload: {
-            data: JSON.stringify(selectedRow.map((e) => e.id)),
+            data: JSON.stringify({
+              args: {
+                data: selectedRow.map((e) => e.id),
+              },
+            }),
           },
           showNotification: false,
           type: 'trigger_action',
@@ -328,9 +453,11 @@ const CustomDataTable = registerComponent('custom data table', {
                 </svg>
               </MenuButton>
             ),
-            actionEdit: row.edit_action,
-            actionPrintLabel: row.print_action,
+            actionEdit: true,
+            // actionPrintLabel: row.print_action,
             actionCreateInvoice: row.create_invoice_action,
+            row,
+            ...props,
           }),
         allowOverflow: true,
         button: true,
@@ -358,6 +485,7 @@ const CustomDataTable = registerComponent('custom data table', {
     return (
       <div style={{ overflow: 'unset !important' }}>
         <DataTable
+          keyField="id"
           columns={columns}
           data={filterText.length ? filteredItems : tableData}
           pagination
@@ -371,7 +499,8 @@ const CustomDataTable = registerComponent('custom data table', {
             row.status_form === 'Completed'
           }
           subHeaderComponent={subHeaderComponentMemo}
-          onRowClicked={(row) => row.on_row_click_action()}
+          // onRowClicked={(row) => row.on_row_click_action()}
+          onRowClicked={(row: any) => setClickedRow(row)}
           onColumnOrderChange={(cols) => console.log(cols)}
         />
         <br />

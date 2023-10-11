@@ -15,6 +15,29 @@ export const ActionMenuComponent = (props: any) => {
     actionPrintLabel,
     actionCreateInvoice,
   } = props;
+
+  const onEditAction = props.hooks?.useActionTrigger(
+    // props.properties.onEditAction,
+    //@ts-ignore
+    [
+      {
+        pageID: props.properties.editPage,
+        rowID: `${props.row.id}`,
+        type: 'jump_to_page',
+        params: {
+          rowId: `${props.row.id}`,
+        },
+        allowBackNavigation: true,
+      },
+    ],
+    props.row,
+    props.pageSource
+  );
+
+  const editAction = () => {
+    onEditAction.handleClick();
+  };
+
   return (
     <Menu>
       {menuButton ? (
@@ -27,7 +50,7 @@ export const ActionMenuComponent = (props: any) => {
       <Portal>
         <MenuList>
           {actionEdit && (
-            <MenuItem onClick={actionEdit}>
+            <MenuItem onClick={editAction}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -47,7 +70,7 @@ export const ActionMenuComponent = (props: any) => {
             </MenuItem>
           )}
           {actionPrintLabel && (
-            <MenuItem onClick={actionPrintLabel}>
+            <MenuItem onClick={() => actionPrintLabel?.handleClick()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -68,7 +91,9 @@ export const ActionMenuComponent = (props: any) => {
             </MenuItem>
           )}
           {platformType === 'admin' && actionCreateInvoice && (
-            <MenuItem onClick={actionCreateInvoice}>
+            <MenuItem
+              onClick={() => actionCreateInvoice?.handleClick()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
