@@ -2670,7 +2670,12 @@ const UserInformationForm: React.FC<IPropsUserInformation> = ({
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'test',
     // defaultValue: 'two',
-    onChange: (value) => handleSelectedFedexAccount(value),
+    onChange: (value) => {
+      handleSelectedFedexAccount({
+        fedexAccountId: value.split(':')[0],
+        serviceType: value.split(':')[1],
+      });
+    },
   });
   // TODO: for radio
 
@@ -2695,6 +2700,7 @@ const UserInformationForm: React.FC<IPropsUserInformation> = ({
   console.log('urshipperRate >>>>>>>', urshipperRate);
 
   const groupedByMember = groupByMember(urshipperRate);
+  let cheapestPrice = 0;
 
   console.log(groupedByMember, `groupedByMember`);
 
@@ -5326,15 +5332,46 @@ const UserInformationForm: React.FC<IPropsUserInformation> = ({
                     <VStack {...group}>
                       {
                         // @ts-ignore
-                        groupedByMember[0].map((item) => (
-                          <CustomRadio
-                            key={String(item.fedexAccountId)}
-                            data={item}
-                            {...getRadioProps({
-                              value: String(item.fedexAccountId),
-                            })}
-                          />
-                        ))
+                        groupedByMember[0].map((item, index) => {
+                          console.log('item >>>>>', item);
+
+                          if (index === 0) {
+                            cheapestPrice = item.totalPrice;
+                            return (
+                              <CustomRadio
+                                key={`${String(
+                                  item.fedexAccountId
+                                )}:${item.serviceType}`}
+                                data={item}
+                                {...getRadioProps({
+                                  value: `${String(
+                                    item.fedexAccountId
+                                  )}:${item.serviceType}`,
+                                })}
+                              />
+                            ); // or undefined, depending on your preference
+                          }
+
+                          const prevPrice =
+                            // @ts-ignore
+                            groupedByMember[0][index - 1];
+                          if (item.totalPrice < cheapestPrice) {
+                            cheapestPrice = item.totalPrice;
+                            return (
+                              <CustomRadio
+                                key={`${String(
+                                  item.fedexAccountId
+                                )}:${item.serviceType}`}
+                                data={item}
+                                {...getRadioProps({
+                                  value: `${String(
+                                    item.fedexAccountId
+                                  )}:${item.serviceType}`,
+                                })}
+                              />
+                            );
+                          }
+                        })
                       }
                     </VStack>
                   )}
@@ -5969,7 +6006,7 @@ const shingleShipment = registerComponent(
 
       // TODO: temp to uupdate.
       const [selectedFedexAccount, setSelectedFedexAccount] =
-        useState<String>(''); // use default acc id.
+        useState<any>(null);
 
       // Data Func
       const generateDefaultFommValue = (
@@ -6213,30 +6250,30 @@ const shingleShipment = registerComponent(
 
       // Get Currency Code
       const getCurrencyData = async (id: any) => {
-        const getTotalRow = await client.project.axios.get(
-          `${server}/v1/table/currency_code?limit=1`,
+        // const getTotalRow = await client.project.axios.get(
+        //   `${server}/v1/table/currency_code?limit=1`,
+        //   { headers: headers }
+        // );
+        // if (getTotalRow.data.total_rows) {
+        // const currencyLength = getTotalRow.data.total_rows;
+        const getAllCurrency = await client.project.axios.get(
+          `${server}/v1/table/currency_code?limit=250`,
           { headers: headers }
         );
-        if (getTotalRow.data.total_rows) {
-          const currencyLength = getTotalRow.data.total_rows;
-          const getAllCurrency = await client.project.axios.get(
-            `${server}/v1/table/currency_code?limit=${currencyLength}`,
-            { headers: headers }
-          );
-          setCurrencyData(getAllCurrency.data.items);
-          setFilteredCurrency(getAllCurrency.data.items);
+        setCurrencyData(getAllCurrency.data.items);
+        setFilteredCurrency(getAllCurrency.data.items);
 
-          for (
-            let index = 0;
-            index < getAllCurrency.data.items.length;
-            index++
-          ) {
-            const element = getAllCurrency.data.items[index];
-            if (element.id === id) {
-              handleSelectedItemsChangeCurrency(element, `item`);
-            }
+        for (
+          let index = 0;
+          index < getAllCurrency.data.items.length;
+          index++
+        ) {
+          const element = getAllCurrency.data.items[index];
+          if (element.id === id) {
+            handleSelectedItemsChangeCurrency(element, `item`);
           }
         }
+        // }
       };
 
       // Get List Item Book
@@ -6862,7 +6899,12 @@ const shingleShipment = registerComponent(
               is_declare_value:
                 information?.shipping.is_declare_value,
               // new_status_urshipper: 'Ready to Ship',
-              shipment: selectedFedexAccount,
+              shipment: selectedFedexAccount
+                ? selectedFedexAccount.fedexAccountId
+                : undefined,
+              service_type: selectedFedexAccount
+                ? selectedFedexAccount.serviceType
+                : undefined,
             };
           }
 
@@ -6927,32 +6969,41 @@ const shingleShipment = registerComponent(
                 relation_state_code: information?.receiver?.state?.id,
               });
             } else {
-              operations.push({
-                operation: 'RemoveRelation',
-                instruction: {
-                  table: 'my_shipment',
-                  name: 'removeRelation',
-                  condition: {
-                    $and: [
-                      {
-                        relation_user_my_shipment: Number(
-                          relationUserShipment
-                        ),
+              currentPackageData.relation_state_code
+                ? operations.push({
+                    operation: 'RemoveRelation',
+                    instruction: {
+                      table: 'my_shipment',
+                      name: 'removeRelation',
+                      condition: {
+                        $or: [
+                          {
+                            $and: [
+                              {
+                                relation_user_my_shipment: {
+                                  $eq: relationUserShipment,
+                                },
+                              },
+                              {
+                                id: {
+                                  $eq: shipmentId,
+                                },
+                              },
+                            ],
+                          },
+                        ],
                       },
-                      {
-                        id: Number(shipmentId),
+                      relation: {
+                        name: 'relation_state_code',
+                        data: {
+                          origin: Number(shipmentId),
+                          target:
+                            currentPackageData.relation_state_code,
+                        },
                       },
-                    ],
-                  },
-                  relation: {
-                    name: 'relation_state_code',
-                    data: {
-                      origin: Number(shipmentId),
-                      target: currentPackageData.relation_state_code,
                     },
-                  },
-                },
-              });
+                  })
+                : null;
             }
           }
 
@@ -6962,14 +7013,22 @@ const shingleShipment = registerComponent(
               table: 'my_shipment',
               name: 'updateShipment',
               condition: {
-                $and: [
+                $or: [
                   {
-                    relation_user_my_shipment: Number(
-                      relationUserShipment
-                    ),
-                  },
-                  {
-                    id: Number(shipmentId),
+                    $and: [
+                      {
+                        relation_user_my_shipment: {
+                          id: {
+                            $eq: relationUserShipment,
+                          },
+                        },
+                      },
+                      {
+                        id: {
+                          $eq: shipmentId,
+                        },
+                      },
+                    ],
                   },
                 ],
               },
@@ -7016,12 +7075,22 @@ const shingleShipment = registerComponent(
                   table: 'package',
                   name: 'updatePackage' + `${index}`,
                   condition: {
-                    $and: [
+                    $or: [
                       {
-                        relation_myshopment_package: shipmentId,
-                      },
-                      {
-                        id: element.id,
+                        $and: [
+                          {
+                            relation_myshopment_package: {
+                              id: {
+                                $eq: shipmentId,
+                              },
+                            },
+                          },
+                          {
+                            id: {
+                              $eq: element.id,
+                            },
+                          },
+                        ],
                       },
                     ],
                   },
@@ -7150,11 +7219,20 @@ const shingleShipment = registerComponent(
                   condition: {
                     $and: [
                       {
-                        relation_shipment_package_comodities:
-                          shipmentId,
-                      },
-                      {
-                        id: element.id,
+                        $and: [
+                          {
+                            relation_shipment_package_comodities: {
+                              id: {
+                                $eq: shipmentId,
+                              },
+                            },
+                          },
+                          {
+                            id: {
+                              $eq: element.id,
+                            },
+                          },
+                        ],
                       },
                     ],
                   },
@@ -7322,7 +7400,7 @@ const shingleShipment = registerComponent(
           // );
 
           const getMultiRate = await client.project.axios.post(
-            `${server}/v1/action/api_crendential/get_rates/1`,
+            `https://urshipper-get-rates-ucf25a6gza-as.a.run.app`,
             { args: payload },
             {
               headers: {
@@ -7332,6 +7410,8 @@ const shingleShipment = registerComponent(
               },
             }
           );
+
+          console.log('getMultiRate', getMultiRate?.data?.result);
 
           // reset urshipperrate
           setUrshipperRate([]);
@@ -7440,16 +7520,7 @@ const shingleShipment = registerComponent(
                 totalDiscount;
 
               const getTransitRate = await client.project.axios.post(
-                `${server}/v1/action/finance_management/transit_rate/1`,
-                {},
-                {
-                  headers: {
-                    authority:
-                      'staging-qore-data-apple-202883.qore.dev',
-                    'x-qore-engine-admin-secret':
-                      'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
-                  },
-                }
+                `https://urshipper-get-rates-ucf25a6gza-as.a.run.app/transit-rate`
               );
 
               const allTransitRate = getTransitRate.data.result;
@@ -7480,6 +7551,8 @@ const shingleShipment = registerComponent(
 
                 el.priority = getDenoRow.priority;
                 el.fedexAccountId = getDenoRow.id;
+                el.serviceType =
+                  getDenoRow.dataFedex?.output?.rateReplyDetails[0]?.serviceType;
                 el.label = getDenoRow.label;
                 el.marked = marked;
                 el.displayVAT = displayVAT;
@@ -7525,7 +7598,7 @@ const shingleShipment = registerComponent(
               shipment_tracking_id: 'DESC',
             },
             condition: {
-              status_form: 'Completed',
+              $or: [{ $or: [{ status_form: { $eq: 'Completed' } }] }],
             },
             limit: 1,
             table: 'my_shipment',
@@ -7585,12 +7658,22 @@ const shingleShipment = registerComponent(
             table: 'my_shipment',
             name: 'updateMyShipment',
             condition: {
-              $and: [
+              $or: [
                 {
-                  relation_user_my_shipment: relationUserShipment,
-                },
-                {
-                  id: shipmentId,
+                  $and: [
+                    {
+                      relation_user_my_shipment: {
+                        id: {
+                          $eq: relationUserShipment,
+                        },
+                      },
+                    },
+                    {
+                      id: {
+                        $eq: shipmentId,
+                      },
+                    },
+                  ],
                 },
               ],
             },
