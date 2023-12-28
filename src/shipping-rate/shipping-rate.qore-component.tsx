@@ -69,13 +69,7 @@ import { FiSearch } from 'react-icons/fi';
 import { CgClose } from 'react-icons/cg';
 import { BsSignpost } from 'react-icons/bs';
 import { MdVerified } from 'react-icons/md';
-import {
-  BiTrash,
-  BiMapPin,
-  BiSolidPackage,
-  BiPlus,
-  BiRefresh,
-} from 'react-icons/bi';
+import { BiTrash, BiMapPin, BiSolidPackage, BiPlus, BiRefresh } from 'react-icons/bi';
 import { SiGooglemaps } from 'react-icons/si';
 import { FaCity } from 'react-icons/fa';
 import ReactSelect from 'react-select';
@@ -89,9 +83,7 @@ const headers = {
 
 function groupByMember(arr: any) {
   // Sort the array by the 'priority' property in ascending order
-  const sortedArray = arr.sort(
-    (a: any, b: any) => a.priority - b.priority
-  );
+  const sortedArray = arr.sort((a: any, b: any) => a.priority - b.priority);
 
   // Group the sorted array by the 'membership' property
   const grouped = sortedArray.reduce((result: any, obj: any) => {
@@ -104,29 +96,8 @@ function groupByMember(arr: any) {
 }
 
 function formatDate(date: Date) {
-  const daysOfWeek = [
-    'Sun',
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-  ];
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const day = daysOfWeek[date.getDay()];
   const dayOfMonth = date.getDate();
@@ -137,9 +108,7 @@ function formatDate(date: Date) {
 }
 
 function currencyFormaterIDR(val: number) {
-  const formatter = new Intl.NumberFormat('IDR').format(
-    Math.floor(val)
-  );
+  const formatter = new Intl.NumberFormat('IDR').format(Math.floor(val));
   return formatter;
 }
 
@@ -166,21 +135,14 @@ function validatePackage(package_type: any, newArr: any) {
     validationNumberOfPackage += Number(element.commodities.qty);
   }
 
-  if (
-    package_type === 'YOUR_PACKAGING' ||
-    package_type === 'Your Packaging'
-  ) {
+  if (package_type === 'YOUR_PACKAGING' || package_type === 'Your Packaging') {
     for (let index = 0; index < newArr.length; index++) {
       const el = newArr[index];
       let itemWeight: any = 0;
       let dimensionsWeight: any = 0;
-      let tempWeight =
-        Number(el.commodities.weight) * Number(el.commodities.qty);
+      let tempWeight = Number(el.commodities.weight) * Number(el.commodities.qty);
       let tempVolumeWeight =
-        ((Number(el.commodities.length) *
-          Number(el.commodities.width) *
-          Number(el.commodities.height)) /
-          5000) *
+        ((Number(el.commodities.length) * Number(el.commodities.width) * Number(el.commodities.height)) / 5000) *
         Number(el.commodities.qty);
       let precisionWeight = tempWeight.toFixed(2);
       let precisionVolumeWeight = tempVolumeWeight.toFixed(2);
@@ -194,9 +156,7 @@ function validatePackage(package_type: any, newArr: any) {
         totalWeight += Number(dimensionsWeight);
       }
       totalActualWeight += Number(precisionWeight);
-      validationTotalCoverAmount +=
-        Number(el.commodities.declareValue.currencyAmount) *
-        Number(el.commodities.qty);
+      validationTotalCoverAmount += Number(el.commodities.declareValue.currencyAmount) * Number(el.commodities.qty);
     }
 
     return {
@@ -209,14 +169,11 @@ function validatePackage(package_type: any, newArr: any) {
     for (let index = 0; index < newArr.length; index++) {
       const el = newArr[index];
       let itemWeight: any = 0;
-      let tempWeight =
-        Number(el.commodities.weight) * Number(el.commodities.qty);
+      let tempWeight = Number(el.commodities.weight) * Number(el.commodities.qty);
       let precisionWeight = tempWeight.toFixed(2);
       itemWeight += Number(precisionWeight);
       totalWeight += Number(itemWeight);
-      validationTotalCoverAmount +=
-        Number(el.commodities.declareValue.currencyAmount) *
-        Number(el.commodities.qty);
+      validationTotalCoverAmount += Number(el.commodities.declareValue.currencyAmount) * Number(el.commodities.qty);
     }
 
     return {
@@ -338,20 +295,11 @@ const YourPackagingData = ({
 
     setAllPackage(newAllPackage);
 
-    const packageValidation = validatePackage(
-      packageType,
-      allPackage
-    );
-    setValidationNumberOfPackage(
-      Number(packageValidation?.validationNumberOfPackage)
-    );
+    const packageValidation = validatePackage(packageType, allPackage);
+    setValidationNumberOfPackage(Number(packageValidation?.validationNumberOfPackage));
     setValidationTotalWeight(Number(packageValidation?.totalWeight));
-    setValidationActualTotalWeight(
-      Number(packageValidation?.totalActualWeight)
-    );
-    setValidationTotalDeclareValue(
-      packageValidation?.validationTotalCoverAmount
-    );
+    setValidationActualTotalWeight(Number(packageValidation?.totalActualWeight));
+    setValidationTotalDeclareValue(packageValidation?.validationTotalCoverAmount);
 
     //Set Validation
     /* let validationNumberOfPackage: any = 0;
@@ -427,12 +375,7 @@ const YourPackagingData = ({
                       onClick={(val: any) => {
                         removePackage(index);
                       }}
-                      leftIcon={
-                        <CgClose
-                          fontSize={'16px'}
-                          color={'#FF4C02'}
-                        />
-                      }
+                      leftIcon={<CgClose fontSize={'16px'} color={'#FF4C02'} />}
                     >
                       Remove
                     </Button>
@@ -444,11 +387,7 @@ const YourPackagingData = ({
 
           <Flex
             w={'100%'}
-            justifyContent={
-              packageType === 'Your Packaging'
-                ? 'space-between'
-                : 'start'
-            }
+            justifyContent={packageType === 'Your Packaging' ? 'space-between' : 'start'}
             gap={5}
             flexWrap={'wrap'}
           >
@@ -461,27 +400,16 @@ const YourPackagingData = ({
                   <InputGroup size="sm">
                     <NumberInput
                       w={'100%'}
-                      onChange={(val: any, type: any) =>
-                        updateContainer(val, 'sum')
-                      }
+                      onChange={(val: any, type: any) => updateContainer(val, 'sum')}
                       step={1}
                       defaultValue={packageData?.commodities?.qty}
                       min={1}
                       max={40}
                       size={'sm'}
                     >
-                      <NumberInputField
-                        borderRadius={'md'}
-                        borderRightRadius={'0'}
-                        _focus={{ outline: 'none' }}
-                      />
+                      <NumberInputField borderRadius={'md'} borderRightRadius={'0'} _focus={{ outline: 'none' }} />
                     </NumberInput>
-                    <InputRightAddon
-                      borderRadius={'md'}
-                      backgroundColor={'#F5F5F5'}
-                      fontWeight={600}
-                      children={'pc'}
-                    />
+                    <InputRightAddon borderRadius={'md'} backgroundColor={'#F5F5F5'} fontWeight={600} children={'pc'} />
                   </InputGroup>
                 </Stack>
               </FormControl>
@@ -502,23 +430,13 @@ const YourPackagingData = ({
                       }}
                       min={0.02}
                       max={packageType === 'Pak' ? 2.5 : 68}
-                      defaultValue={Number(
-                        packageData?.commodities?.weight
-                      )}
+                      defaultValue={Number(packageData?.commodities?.weight)}
                       precision={2}
                       step={0.01}
                     >
-                      <NumberInputField
-                        borderRadius={'md'}
-                        borderRightRadius={'0'}
-                        _focus={{ outline: 'none' }}
-                      />
+                      <NumberInputField borderRadius={'md'} borderRightRadius={'0'} _focus={{ outline: 'none' }} />
                     </NumberInput>
-                    <InputRightAddon
-                      backgroundColor={'#F5F5F5'}
-                      fontWeight={600}
-                      children={'kg'}
-                    />
+                    <InputRightAddon backgroundColor={'#F5F5F5'} fontWeight={600} children={'kg'} />
                   </InputGroup>
                 </Stack>
               </FormControl>
@@ -617,11 +535,7 @@ const YourPackagingData = ({
                             _focus={{ outline: 'none' }}
                           />
                         </NumberInput>
-                        <InputRightAddon
-                          backgroundColor={'#F5F5F5'}
-                          fontWeight={600}
-                          children={'cm'}
-                        />
+                        <InputRightAddon backgroundColor={'#F5F5F5'} fontWeight={600} children={'cm'} />
                       </InputGroup>
                     </Box>
                   </Stack>
@@ -636,11 +550,7 @@ const YourPackagingData = ({
             w={'100%'}
             py={'20px'}
             gap={5}
-            justifyContent={
-              packageType === 'Your Packaging'
-                ? 'space-between'
-                : 'start'
-            }
+            justifyContent={packageType === 'Your Packaging' ? 'space-between' : 'start'}
             flexWrap={'wrap'}
           >
             {packageType === 'Your Packaging' ? (
@@ -662,18 +572,9 @@ const YourPackagingData = ({
                       }
                       isDisabled={true}
                     >
-                      <NumberInputField
-                        borderRadius={'md'}
-                        borderRightRadius={'0'}
-                        _focus={{ outline: 'none' }}
-                      />
+                      <NumberInputField borderRadius={'md'} borderRightRadius={'0'} _focus={{ outline: 'none' }} />
                     </NumberInput>
-                    <InputRightAddon
-                      borderRadius={'md'}
-                      backgroundColor={'#F5F5F5'}
-                      fontWeight={600}
-                      children={'kg'}
-                    />
+                    <InputRightAddon borderRadius={'md'} backgroundColor={'#F5F5F5'} fontWeight={600} children={'kg'} />
                   </InputGroup>
                 </FormControl>
               </Box>
@@ -696,20 +597,12 @@ const YourPackagingData = ({
                         value={
                           (Number(packageData?.commodities?.length) *
                             Number(packageData?.commodities?.width) *
-                            Number(
-                              packageData?.commodities?.height
-                            )) /
+                            Number(packageData?.commodities?.height)) /
                             5000 >
                           Number(packageData?.commodities?.weight)
-                            ? (Number(
-                                packageData?.commodities?.length
-                              ) *
-                                Number(
-                                  packageData?.commodities?.width
-                                ) *
-                                Number(
-                                  packageData?.commodities?.height
-                                )) /
+                            ? (Number(packageData?.commodities?.length) *
+                                Number(packageData?.commodities?.width) *
+                                Number(packageData?.commodities?.height)) /
                               5000
                             : Number(packageData?.commodities?.weight)
                         }
@@ -717,11 +610,7 @@ const YourPackagingData = ({
                         precision={2}
                         isDisabled={true}
                       >
-                        <NumberInputField
-                          borderRadius={'md'}
-                          borderRightRadius={'0'}
-                          _focus={{ outline: 'none' }}
-                        />
+                        <NumberInputField borderRadius={'md'} borderRightRadius={'0'} _focus={{ outline: 'none' }} />
                       </NumberInput>
                       <InputRightAddon
                         borderRadius={'md'}
@@ -753,16 +642,9 @@ const YourPackagingData = ({
                           onChange={(val: any, type: any) => {
                             updateContainer(val, 'cover');
                           }}
-                          defaultValue={Number(
-                            packageData?.commodities?.declareValue
-                              ?.currencyAmount
-                          )}
+                          defaultValue={Number(packageData?.commodities?.declareValue?.currencyAmount)}
                         >
-                          <NumberInputField
-                            borderRadius={'md'}
-                            borderRightRadius={'0'}
-                            _focus={{ outline: 'none' }}
-                          />
+                          <NumberInputField borderRadius={'md'} borderRightRadius={'0'} _focus={{ outline: 'none' }} />
                         </NumberInput>
                         <InputRightAddon
                           borderRadius={'md'}
@@ -806,15 +688,8 @@ const AllRateTab = ({
   action: any;
   showRateButton: any;
 }) => {
-  const [tabColor, setTabColor] = useState<any[]>([
-    true,
-    false,
-    false,
-    false,
-  ]);
-  const [tabIndex, setTabIndex] = useState<number>(
-    userMembership.length > 0 ? userMembership?.index : 0
-  );
+  const [tabColor, setTabColor] = useState<any[]>([true, false, false, false]);
+  const [tabIndex, setTabIndex] = useState<number>(userMembership.length > 0 ? userMembership?.index : 0);
   const [iconVerfy, setIconVerfy] = useState<boolean>(false);
   const [boxLoad, setBoxLoad] = useState<boolean>(true);
 
@@ -836,10 +711,7 @@ const AllRateTab = ({
 
     for (let index = 0; index < membershipPlan.length; index++) {
       const element = membershipPlan[index];
-      if (
-        element?.membership ===
-        userMembership[0]?.lookup_membership_type
-      ) {
+      if (element?.membership === userMembership[0]?.lookup_membership_type) {
         indexNumber = index;
         userMembership[0].membershipIcon = true;
       } else {
@@ -873,195 +745,172 @@ const AllRateTab = ({
     setBoxLoad(false);
   };
 
-  console.log(urshipperRate, `urshipperRate`);
-
   const groupedByMember = groupByMember(urshipperRate);
+  let cheapestPrice = 0;
 
-  console.log(groupedByMember, `groupedByMember`);
   return (
     <Box w={'100%'}>
-      {!boxLoad && (
-        <Tabs
-          defaultIndex={tabIndex}
-          isLazy
-          onChange={(index: any) => setTabIndex(index)}
-          isFitted
-          variant="soft-rounded"
+      {/* {!boxLoad && ( */}
+      <Tabs
+        defaultIndex={tabIndex}
+        isLazy
+        onChange={(index: any) => setTabIndex(index)}
+        isFitted
+        variant="soft-rounded"
+      >
+        <Box
+          backgroundColor={'#fff'}
+          pointerEvents={showRateButton ? 'auto' : 'none'}
+          opacity={showRateButton ? 1 : 0.5}
+          mb={'20px'}
+          p={'24px'}
+          boxShadow={'lg'}
         >
-          <Box
-            backgroundColor={'#fff'}
-            mt={'80px'}
-            mb={'20px'}
-            p={'24px'}
-            boxShadow={'lg'}
-          >
-            <Center mb={'20px'} flexDirection={'column'}>
-              <Box
-                color={'#000000'}
-                fontSize={'20px'}
-                fontWeight={600}
-              >
-                Pick Your Membership Plan
-              </Box>
-              <Box
-                fontSize={'16px'}
-                fontWeight={600}
-                color={'rgb(122,122,122)'}
-              >
-                Select your flexible membership plan for an exclusive
-                discounted rate.
-              </Box>
-            </Center>
+          <Center mb={'20px'} flexDirection={'column'}>
+            <Box color={'#000000'} fontSize={'20px'} fontWeight={600}>
+              Pick Your Membership Plan
+            </Box>
+            <Box fontSize={'16px'} fontWeight={600} color={'rgb(122,122,122)'}>
+              Select your flexible membership plan for an exclusive discounted rate.
+            </Box>
+          </Center>
 
-            <TabList>
-              <Center justifyContent={'space-between'} w={'100%'}>
-                {membershipPlan.map(
-                  (el: any, tabListIndex: number) => {
-                    return (
-                      <Box
-                        p={'10px'}
-                        w={'calc(100% / 4)'}
-                        onClick={() => {}}
-                      >
-                        <Center
-                          flexDirection={'column'}
-                          bg={
-                            tabColor[tabListIndex]
-                              ? '#FDE4D9'
-                              : '#F7F7F7'
-                          }
-                        >
-                          <Box
-                            color={'#000000'}
-                            textAlign={'center'}
-                            mt={'20px'}
-                          >
-                            <Box mb={'20px'} fontWeight={600}>
-                              {el.membership === 'Free'
-                                ? 'Starter'
-                                : el.membership}
-                            </Box>
-                            <Box>
-                              {el.membership === 'Free'
-                                ? 'No Subscription'
-                                : `IDR ${currencyFormaterIDR(
-                                    el.price
-                                  )} / month`}
-                            </Box>
-                            <Box mb={'20px'}>
-                              {el.membership === 'Free'
-                                ? 'Publish Rates'
-                                : `${Number(
-                                    el.discount
-                                  )}% Discount Rates`}
-                            </Box>
-                          </Box>
-                          <Tab
-                            w={'90%'}
-                            py={'5px'}
-                            borderRadius={'10px'}
-                            m={'10px'}
-                            border={'1px solid #A7A7A7'}
-                            color={'#000000'}
-                            backgroundColor={'#FFFFFF'}
-                            _selected={{
-                              border: '1px solid #FF4C02',
-                              color: 'white',
-                              bg: '#FF4C02',
-                            }}
-                            key={tabListIndex}
-                          >
-                            {el.membership === 'Free'
-                              ? 'Start'
-                              : el.membership}{' '}
-                            Rate
-                          </Tab>
-                        </Center>
+          <TabList>
+            <Center justifyContent={'space-between'} w={'100%'}>
+              {membershipPlan.map((el: any, tabListIndex: number) => {
+                return (
+                  <Box p={'10px'} w={'calc(100% / 4)'} onClick={() => {}}>
+                    <Center flexDirection={'column'} bg={tabColor[tabListIndex] ? '#FDE4D9' : '#F7F7F7'}>
+                      <Box color={'#000000'} textAlign={'center'} mt={'20px'}>
+                        <Box mb={'20px'} fontWeight={600}>
+                          {el.membership === 'Free' ? 'Starter' : el.membership}
+                        </Box>
+                        <Box>
+                          {el.membership === 'Free'
+                            ? 'No Subscription'
+                            : `IDR ${currencyFormaterIDR(el.price)} / month`}
+                        </Box>
+                        <Box mb={'20px'}>
+                          {el.membership === 'Free' ? 'Publish Rates' : `${Number(el.discount)}% Discount Rates`}
+                        </Box>
                       </Box>
-                    );
-                  }
-                )}
-              </Center>
-            </TabList>
-          </Box>
-
-          <Box
-            backgroundColor={'#fff'}
-            // mt={'80px'}
-            mb={'20px'}
-            p={'24px'}
-            boxShadow={'lg'}
-          >
-            <Center mb={'20px'} flexDirection={'column'}>
-              <Box
-                color={'#000000'}
-                fontSize={'20px'}
-                fontWeight={600}
-              >
-                Rates & Delivery
-              </Box>
-              <Box
-                fontSize={'16px'}
-                fontWeight={600}
-                color={'rgb(122,122,122)'}
-              >
-                Your rates and delivery estimates for shipping on Tue,
-                {formatDate(new Date())}
-              </Box>
+                      <Tab
+                        w={'90%'}
+                        py={'5px'}
+                        borderRadius={'10px'}
+                        m={'10px'}
+                        border={'1px solid #A7A7A7'}
+                        color={'#000000'}
+                        backgroundColor={'#FFFFFF'}
+                        _selected={{
+                          border: '1px solid #FF4C02',
+                          color: 'white',
+                          bg: '#FF4C02',
+                        }}
+                        key={tabListIndex}
+                      >
+                        {el.membership === 'Free' ? 'Start' : el.membership} Rate
+                      </Tab>
+                    </Center>
+                  </Box>
+                );
+              })}
             </Center>
-            <TabPanels transition={'0.3s'}>
-              {/* TODO: tambah validasi, show if cheaper than priority 1 */}
-              {groupedByMember && groupedByMember.length > 0
-                ? groupedByMember.map((rates: any, index: number) => (
-                    <TabPanel transition={'0.3s'} key={index}>
-                      {/* Estimated Delivery */}
-                      {rates.length > 0
-                        ? rates.map((el: any, index: number) => (
-                            <>
-                              {el.elestimatedDeliv && (
-                                <VStack mt={'14px'} mb={'10px'}>
-                                  <Flex
-                                    bg={'#F7F7F7'}
-                                    borderRadius={'2px'}
-                                    p={'15px 20px'}
-                                    w={'100%'}
-                                    justifyContent={'space-between'}
-                                  >
-                                    <Box
-                                      color={'#171717'}
-                                      fontWeight={'bold'}
-                                      w={'220px'}
+          </TabList>
+        </Box>
+
+        <Box
+          backgroundColor={'#fff'}
+          // mt={'80px'}
+          pointerEvents={showRateButton ? 'auto' : 'none'}
+          opacity={showRateButton ? 1 : 0.5}
+          mb={'20px'}
+          p={'24px'}
+          boxShadow={'lg'}
+        >
+          <Center mb={'20px'} flexDirection={'column'}>
+            <Box color={'#000000'} fontSize={'20px'} fontWeight={600}>
+              Rates & Delivery
+            </Box>
+            <Box fontSize={'16px'} fontWeight={600} color={'rgb(122,122,122)'}>
+              Your rates and delivery estimates for shipping on,
+              {formatDate(new Date())}
+            </Box>
+          </Center>
+          <TabPanels transition={'0.3s'}>
+            {/* TODO: tambah validasi, show if cheaper than priority 1 */}
+            {groupedByMember && groupedByMember.length > 0
+              ? groupedByMember.map((rates: any, index: number) => (
+                  <TabPanel transition={'0.3s'} key={index}>
+                    {/* Estimated Delivery */}
+                    {rates.length > 0
+                      ? rates.map((el: any, index: number) => {
+                          if (index === 0) {
+                            cheapestPrice = el.totalPrice;
+                            return (
+                              <>
+                                {el.elestimatedDeliv && (
+                                  <VStack mt={'14px'} mb={'10px'}>
+                                    <Flex
+                                      bg={'#F7F7F7'}
+                                      borderRadius={'2px'}
+                                      p={'15px 20px'}
+                                      w={'100%'}
+                                      justifyContent={'space-between'}
                                     >
-                                      FedEx Intl. Priority
-                                    </Box>
-                                    <Box
-                                      color={'#171717'}
-                                      fontWeight={'bold'}
+                                      <Box color={'#171717'} fontWeight={'bold'} w={'220px'}>
+                                        {el.label}
+                                      </Box>
+                                      <Box color={'#171717'} fontWeight={'bold'}>
+                                        {el.elestimatedDeliv}
+                                      </Box>
+                                      <Box color={'#171717'} fontWeight={'bold'} textAlign={'right'}>
+                                        {`IDR ${currencyFormaterIDR(el.totalPrice)}`}
+                                      </Box>
+                                    </Flex>
+                                  </VStack>
+                                )}
+                              </>
+                            ); // or undefined, depending on your preference
+                          }
+
+                          if (el.totalPrice < cheapestPrice) {
+                            cheapestPrice = el.totalPrice;
+                            return (
+                              <>
+                                {el.elestimatedDeliv && (
+                                  <VStack mt={'14px'} mb={'10px'}>
+                                    <Flex
+                                      bg={'#F7F7F7'}
+                                      borderRadius={'2px'}
+                                      p={'15px 20px'}
+                                      w={'100%'}
+                                      justifyContent={'space-between'}
                                     >
-                                      {el.elestimatedDeliv}
-                                    </Box>
-                                    <Box
-                                      color={'#171717'}
-                                      fontWeight={'bold'}
-                                      textAlign={'right'}
-                                    >
-                                      {`IDR ${currencyFormaterIDR(
-                                        el.totalPrice
-                                      )}`}
-                                    </Box>
-                                  </Flex>
-                                </VStack>
-                              )}
-                            </>
-                          ))
-                        : null}
-                    </TabPanel>
-                  ))
-                : null}
-            </TabPanels>
-          </Box>
-        </Tabs>
-      )}
+                                      <Box color={'#171717'} fontWeight={'bold'} w={'220px'}>
+                                        {el.label}
+                                      </Box>
+                                      <Box color={'#171717'} fontWeight={'bold'}>
+                                        {el.elestimatedDeliv}
+                                      </Box>
+                                      <Box color={'#171717'} fontWeight={'bold'} textAlign={'right'}>
+                                        {`IDR ${currencyFormaterIDR(el.totalPrice)}`}
+                                      </Box>
+                                    </Flex>
+                                  </VStack>
+                                )}
+                              </>
+                            );
+                          }
+                        })
+                      : null}
+                  </TabPanel>
+                ))
+              : null}
+          </TabPanels>
+        </Box>
+      </Tabs>
+      {/* )} */}
       <Flex gap={5} justifyContent={'end'}>
         <Box>
           <Button
@@ -1157,11 +1006,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
   Component: (props: any) => {
     const platformType = props.properties.platform_type;
 
-    const action = props.hooks.useActionTrigger(
-      props.properties.action,
-      props.data.page.row,
-      props.pageSource
-    );
+    const action = props.hooks.useActionTrigger(props.properties.action, props.data.page.row, props.pageSource);
 
     const jumpToPage = async () => {
       try {
@@ -1174,11 +1019,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     const userId = props.hooks.useTemplate(props.properties.userId);
     const client = props.hooks.useClient();
 
-    const actionDenoTest = props.hooks.useActionTrigger(
-      props.properties.action,
-      props.data.page.row,
-      props.pageSource
-    );
+    const actionDenoTest = props.hooks.useActionTrigger(props.properties.action, props.data.page.row, props.pageSource);
 
     // Global Status
     const [pageIsLoading, setPageIsLoading] = useState<boolean>(true);
@@ -1188,8 +1029,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     const [userMembership, setUserMembership] = useState<any[]>([]);
     const [membershipPlan, setMembershipPlan] = useState<any[]>([]);
     const [isShowRate, setIsShowRate] = useState<boolean>(false);
-    const [showRateButton, setShowRateButton] =
-      useState<boolean>(false);
+    const [showRateButton, setShowRateButton] = useState<boolean>(false);
 
     // Fedex Status
     const [isErrorFedex, setIsErrorFedex] = useState<boolean>(false);
@@ -1205,18 +1045,10 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     const animateNewContainer = useDisclosure();
     const animateRate = useDisclosure();
     // Dropdown Search Box
-    const [
-      receiverCountrySearchBoxLoad,
-      setReceiverCountrySearchBoxLoad,
-    ] = useState<boolean>(false); // Load Search
-    const [
-      receiverCountryProvinceSearchBoxLoad,
-      setReceiverCountryProvinceSearchBoxLoad,
-    ] = useState<boolean>(false);
-    const [searchCurrencyLoad, setSearchCurrencyLoad] =
-      useState<boolean>(false);
-    const [receiverCitySearchBoxLoad, setReceiverCitySearchBoxLoad] =
-      useState<boolean>(false);
+    const [receiverCountrySearchBoxLoad, setReceiverCountrySearchBoxLoad] = useState<boolean>(false); // Load Search
+    const [receiverCountryProvinceSearchBoxLoad, setReceiverCountryProvinceSearchBoxLoad] = useState<boolean>(false);
+    const [searchCurrencyLoad, setSearchCurrencyLoad] = useState<boolean>(false);
+    const [receiverCitySearchBoxLoad, setReceiverCitySearchBoxLoad] = useState<boolean>(false);
     const receiverCountryPopover = useDisclosure();
     const receiverCountryProvincePopover = useDisclosure();
     const receiverCityPopover = useDisclosure();
@@ -1227,10 +1059,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     const [currencyData, setCurrencyData] = useState<any[]>([]);
     // Province Data
     const [provinceData, setProvinceData] = useState<any[]>([]);
-    const [
-      currentCountryProvinceReceiverList,
-      setCurrentFilteredCountryProvinceReceiverList,
-    ] = useState<any[]>([]);
+    const [currentCountryProvinceReceiverList, setCurrentFilteredCountryProvinceReceiverList] = useState<any[]>([]);
     // City Data
     const [cityData, setCityData] = useState<any[]>([]);
     // UrShipper Data
@@ -1238,76 +1067,38 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     // Receiver Address Country
     const [isProvince, setIsProvince] = useState<boolean>(false);
-    const [searchReceiverCountry, setSearchReceiverCountry] =
-      useState<string>('');
-    const [receiverCountryCode, setReceiverCountryCode] =
-      useState<string>('');
-    const [receiverCountryName, setReceiverCountryName] =
-      useState<string>('');
-    const [filteredCountryReceiver, setFilteredCountryReceiver] =
-      useState<any[]>([]);
-    const [
-      selectedItemsReceiverCountry,
-      setSelectedItemReceiverCountry,
-    ] = useState<string>('');
+    const [searchReceiverCountry, setSearchReceiverCountry] = useState<string>('');
+    const [receiverCountryCode, setReceiverCountryCode] = useState<string>('');
+    const [receiverCountryName, setReceiverCountryName] = useState<string>('');
+    const [filteredCountryReceiver, setFilteredCountryReceiver] = useState<any[]>([]);
+    const [selectedItemsReceiverCountry, setSelectedItemReceiverCountry] = useState<string>('');
     // Receiver Address Province
-    const [
-      searchReceiverCountryProvince,
-      setSearchReceiverCountryProvince,
-    ] = useState<string>('');
-    const [
-      receiverCountryProvinceCode,
-      setReceiverCountryProvinceCode,
-    ] = useState<string>('');
-    const [
-      filteredCountryProvinceReceiver,
-      setFilteredCountryProvinceReceiver,
-    ] = useState<any[]>([]);
-    const [
-      selectedItemsReceiverCountryProvince,
-      setSelectedItemReceiverCountryProvince,
-    ] = useState<string>('');
+    const [searchReceiverCountryProvince, setSearchReceiverCountryProvince] = useState<string>('');
+    const [receiverCountryProvinceCode, setReceiverCountryProvinceCode] = useState<string>('');
+    const [filteredCountryProvinceReceiver, setFilteredCountryProvinceReceiver] = useState<any[]>([]);
+    const [selectedItemsReceiverCountryProvince, setSelectedItemReceiverCountryProvince] = useState<string>('');
     // Receiver Address City
     const [isCity, setIsCity] = useState<boolean>(false);
-    const [searchReceiverCity, setSearchReceiverCity] =
-      useState<string>('');
+    const [searchReceiverCity, setSearchReceiverCity] = useState<string>('');
     const [receiverCity, setReceiverCity] = useState<string>('');
-    const [filteredReceiverCity, setFilteredReceiverCity] = useState<
-      any[]
-    >([]);
-    const [selectedItemsReceiverCity, setSelectedItemReceiverCity] =
-      useState<string>('');
+    const [filteredReceiverCity, setFilteredReceiverCity] = useState<any[]>([]);
+    const [selectedItemsReceiverCity, setSelectedItemReceiverCity] = useState<string>('');
     // Receiver Address Zip Code
-    const [isZipCodeCountry, setIsZipCodeCountry] =
-      useState<boolean>(false);
-    const [receiverZipCode, setReceiverZipCode] =
-      useState<string>('');
+    const [isZipCodeCountry, setIsZipCodeCountry] = useState<boolean>(false);
+    const [receiverZipCode, setReceiverZipCode] = useState<string>('');
     //Handle Validation Container
-    const [validationNumberOfPackage, setValidationNumberOfPackage] =
-      useState<number>(0);
-    const [validationTotalWeight, setValidationTotalWeight] =
-      useState<number>(0);
-    const [
-      validationTotalDeclareValue,
-      setValidationTotalDeclareValue,
-    ] = useState<number>(0);
-    const [
-      validationActualTotalWeight,
-      setValidationActualTotalWeight,
-    ] = useState<number>(0);
+    const [validationNumberOfPackage, setValidationNumberOfPackage] = useState<number>(0);
+    const [validationTotalWeight, setValidationTotalWeight] = useState<number>(0);
+    const [validationTotalDeclareValue, setValidationTotalDeclareValue] = useState<number>(0);
+    const [validationActualTotalWeight, setValidationActualTotalWeight] = useState<number>(0);
 
-    const [showRateLoading, setShowRateLoading] =
-      useState<boolean>(false);
+    const [showRateLoading, setShowRateLoading] = useState<boolean>(false);
     const [showRateError, setShowRateError] = useState<any>([]);
 
     // Handle Dropdown Select Receiver Country
-    const handleSelectedItemsChangeReceiverCountry = async (
-      selectedItems: any
-    ) => {
+    const handleSelectedItemsChangeReceiverCountry = async (selectedItems: any) => {
       if (selectedItems) {
-        await setSelectedItemReceiverCountry(
-          `${selectedItems.code} - ${selectedItems.country}`
-        );
+        await setSelectedItemReceiverCountry(`${selectedItems.code} - ${selectedItems.country}`);
         await setReceiverCountryCode(selectedItems.code);
         await setReceiverCountryName(selectedItems.country);
         await receiverCountryPopover.onClose();
@@ -1317,13 +1108,9 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
       }
     };
     // Handle Dropdown Select Receiver Country
-    const handleSelectedItemsChangeReceiverCountryProvince = async (
-      selectedItems: any
-    ) => {
+    const handleSelectedItemsChangeReceiverCountryProvince = async (selectedItems: any) => {
       if (selectedItems) {
-        await setSelectedItemReceiverCountryProvince(
-          `${selectedItems.province}`
-        );
+        await setSelectedItemReceiverCountryProvince(`${selectedItems.province}`);
         await setReceiverCountryProvinceCode(selectedItems.code);
         await setSearchReceiverCountryProvince('');
         await receiverCountryProvincePopover.onClose();
@@ -1331,9 +1118,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     };
 
     // Handle Dropdown Select Receiver City
-    const handleSelectedItemsChangeReceiverCity = async (
-      selectedItems: any
-    ) => {
+    const handleSelectedItemsChangeReceiverCity = async (selectedItems: any) => {
       if (selectedItems) {
         await setSelectedItemReceiverCity(`${selectedItems.city}`);
         await setReceiverCity(selectedItems.city);
@@ -1343,30 +1128,20 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     };
 
     //Handle Dropdown Select Currency
-    const [
-      customSelectedItemsCurrency,
-      setCustomSelectedItemCurrency,
-    ] = useState<string>('');
+    const [customSelectedItemsCurrency, setCustomSelectedItemCurrency] = useState<string>('');
     const [currencyCode, setCurrencyCode] = useState<string>('USD');
     const currencyCodePopover = useDisclosure();
-    const handleSelectedItemsChangeCurrency = async (
-      selectedItems: any
-    ) => {
+    const handleSelectedItemsChangeCurrency = async (selectedItems: any) => {
       if (selectedItems) {
-        await setCustomSelectedItemCurrency(
-          `${selectedItems.code} - ${selectedItems.currency}`
-        );
+        await setCustomSelectedItemCurrency(`${selectedItems.code} - ${selectedItems.currency}`);
         await setCurrencyCode(selectedItems.code);
         await currencyCodePopover.onClose();
         let declareCurrency: any = currencyCode;
         let totalDeclareAmount: any = 0;
         let newPack: any = [];
         allPackage.forEach((el: any) => {
-          el.commodities.declareValue.currencyCode =
-            selectedItems.code;
-          totalDeclareAmount +=
-            Number(el.commodities.declareValue.currencyAmount) *
-            Number(el.commodities.qty);
+          el.commodities.declareValue.currencyCode = selectedItems.code;
+          totalDeclareAmount += Number(el.commodities.declareValue.currencyAmount) * Number(el.commodities.qty);
           el.commodities.declareValue.currencyCode = declareCurrency;
           newPack.push(el);
         });
@@ -1376,15 +1151,11 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     };
 
     //Handle Declare Value
-    const [isDeclareValue, setIsDeclareValue] =
-      useState<string>('No');
+    const [isDeclareValue, setIsDeclareValue] = useState<string>('No');
     const [searchCurrency, setSearchCurrency] = useState<string>('');
-    const [filteredCurrency, setFilteredCurrency] = useState<any[]>(
-      []
-    );
+    const [filteredCurrency, setFilteredCurrency] = useState<any[]>([]);
     //Handle Package
-    const [packageType, setPackageType] =
-      useState<string>('Your Packaging');
+    const [packageType, setPackageType] = useState<string>('Your Packaging');
     //Handle AllPackage
     const [allPackage, setAllPackage] = useState<any[]>([
       {
@@ -1439,12 +1210,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
         setPageIsLoading(false);
         animateAddressBox.onOpen();
       }
-    }, [
-      countryData.length,
-      currencyData.length,
-      provinceData.length,
-      membershipPlan.length,
-    ]);
+    }, [countryData.length, currencyData.length, provinceData.length, membershipPlan.length]);
 
     // Country Data onChange
     useEffect(() => {
@@ -1518,21 +1284,13 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     // Enable/Disabed Show Rate Button
     useEffect(() => {
-      if (
-        receiverCountryCode &&
-        receiverZipCode &&
-        receiverZipCode !== '00000'
-      ) {
+      if (receiverCountryCode && receiverZipCode && receiverZipCode !== '00000') {
         setShowRateButton(true);
       }
     }, [receiverCountryCode, receiverZipCode]);
 
     useEffect(() => {
-      if (
-        receiverCountryCode &&
-        receiverCity &&
-        receiverZipCode === '00000'
-      ) {
+      if (receiverCountryCode && receiverCity && receiverZipCode === '00000') {
         setShowRateButton(true);
       }
     }, [receiverCountryCode, receiverCity]);
@@ -1562,31 +1320,16 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
     const getMembershipPlan = async () => {
       try {
         const getTransitRate = await client.project.axios.post(
-          `${server}/v1/action/finance_management/transit_rate/1`,
-          {},
-          {
-            headers: {
-              authority: 'staging-qore-data-apple-202883.qore.dev',
-              'x-qore-engine-admin-secret':
-                'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
-            },
-          }
+          `https://urshipper-get-rates-ucf25a6gza-as.a.run.app/transit-rate`
         );
 
         setMembershipPlan(getTransitRate.data.result);
 
         if (platformType === 'client') {
           let userMembershipData = await getUserMembership(userId);
-          for (
-            let index = 0;
-            index < getTransitRate.data.result.length;
-            index++
-          ) {
+          for (let index = 0; index < getTransitRate.data.result.length; index++) {
             const element = getTransitRate.data.result[index];
-            if (
-              element?.membership ===
-              userMembershipData[0]?.lookup_membership_type
-            ) {
+            if (element?.membership === userMembershipData[0]?.lookup_membership_type) {
               userMembershipData[0].index = index;
             }
           }
@@ -1628,41 +1371,22 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     //Get Country Data
     const getCountryData = async () => {
-      const getTotalRow = await client.project.axios.get(
-        `${server}/v1/table/country_code?limit=1`,
-        { headers: headers }
+      const getAllCountry = await client.project.axios.post(
+        `https://asia-southeast1-accenture-283510.cloudfunctions.net/urshipper-get-countries`
       );
-      if (getTotalRow.data.total_rows) {
-        const countryLength = getTotalRow.data.total_rows;
-        const getAllCountry = await client.project.axios.get(
-          `${server}/v1/grid/other_related?limit=${countryLength}&params[country_code]=ID&params[search_country_by_name]=`,
-          { headers: headers }
-        );
-        await setCountryData(getAllCountry.data.items);
-        await setFilteredCountryReceiver(getAllCountry.data.items);
-      }
+
+      await setCountryData(getAllCountry.data.data);
+      await setFilteredCountryReceiver(getAllCountry.data.data);
     };
 
     // Receiver Country List Filter
     const getListFilterReceiverCountry = async () => {
       setReceiverCountrySearchBoxLoad(true);
       const countryFilter = countryData.filter((el: any) => {
-        if (
-          el.country
-            .toLowerCase()
-            .match(searchReceiverCountry.toLowerCase())
-        ) {
-          return el.country
-            .toLowerCase()
-            .match(searchReceiverCountry.toLowerCase());
-        } else if (
-          el.code
-            .toLowerCase()
-            .match(searchReceiverCountry.toLowerCase())
-        ) {
-          return el.code
-            .toLowerCase()
-            .match(searchReceiverCountry.toLowerCase());
+        if (el.country.toLowerCase().match(searchReceiverCountry.toLowerCase())) {
+          return el.country.toLowerCase().match(searchReceiverCountry.toLowerCase());
+        } else if (el.code.toLowerCase().match(searchReceiverCountry.toLowerCase())) {
+          return el.code.toLowerCase().match(searchReceiverCountry.toLowerCase());
         }
       });
 
@@ -1689,57 +1413,31 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     // Get Province Data
     const getProvinceData = async () => {
-      const getTotalRow = await client.project.axios.get(
-        `${server}/v1/table/state_code?limit=1`,
-        { headers: headers }
-      );
-
-      if (getTotalRow.data.total_rows) {
-        const provinceLength = getTotalRow.data.total_rows;
-        const getAllState = await client.project.axios.get(
-          `${server}/v1/table/state_code?limit=${provinceLength}`,
-          { headers: headers }
-        );
-        await setProvinceData(getAllState.data.items);
-      }
+      const getAllState = await client.project.axios.get(`${server}/v1/table/state_code?limit=5000`, {
+        headers: headers,
+      });
+      await setProvinceData(getAllState.data.items);
     };
 
     // Get Current Country Province Data
     const getCountryProvinceData = async () => {
-      const countryState = provinceData.filter(
-        (el: any, index: number) => {
-          return el.country_code.match(receiverCountryCode);
-        }
-      );
-      await setCurrentFilteredCountryProvinceReceiverList(
-        countryState
-      );
+      const countryState = provinceData.filter((el: any, index: number) => {
+        return el.country_code.match(receiverCountryCode);
+      });
+      await setCurrentFilteredCountryProvinceReceiverList(countryState);
       await setFilteredCountryProvinceReceiver(countryState);
     };
 
     // Receiver Country Province List Filter
     const getListFilterReceiverCountryProvince = async () => {
       setReceiverCountryProvinceSearchBoxLoad(true);
-      const provinceFilter =
-        currentCountryProvinceReceiverList.filter((el: any) => {
-          if (
-            el.province
-              .toLowerCase()
-              .match(searchReceiverCountryProvince.toLowerCase())
-          ) {
-            return el.province
-              .toLowerCase()
-              .match(searchReceiverCountryProvince.toLowerCase());
-          } else if (
-            el.code
-              .toLowerCase()
-              .match(searchReceiverCountryProvince.toLowerCase())
-          ) {
-            return el.code
-              .toLowerCase()
-              .match(searchReceiverCountryProvince.toLowerCase());
-          }
-        });
+      const provinceFilter = currentCountryProvinceReceiverList.filter((el: any) => {
+        if (el.province.toLowerCase().match(searchReceiverCountryProvince.toLowerCase())) {
+          return el.province.toLowerCase().match(searchReceiverCountryProvince.toLowerCase());
+        } else if (el.code.toLowerCase().match(searchReceiverCountryProvince.toLowerCase())) {
+          return el.code.toLowerCase().match(searchReceiverCountryProvince.toLowerCase());
+        }
+      });
 
       await setFilteredCountryProvinceReceiver(provinceFilter);
       setTimeout(() => {
@@ -1749,27 +1447,17 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     //Get Currency Data
     const getCurrencyData = async () => {
-      const getTotalRow = await client.project.axios.get(
-        `${server}/v1/table/currency_code?limit=1`,
-        { headers: headers }
-      );
-      if (getTotalRow.data.total_rows) {
-        const currencyLength = getTotalRow.data.total_rows;
-        const getAllCurrency = await client.project.axios.get(
-          `${server}/v1/table/currency_code?limit=${currencyLength}`,
-          { headers: headers }
-        );
-        await setCurrencyData(getAllCurrency.data.items);
-        await setFilteredCurrency(getAllCurrency.data.items);
-      }
+      const getAllCurrency = await client.project.axios.get(`${server}/v1/table/currency_code?limit=250`, {
+        headers: headers,
+      });
+      await setCurrencyData(getAllCurrency.data.items);
+      await setFilteredCurrency(getAllCurrency.data.items);
     };
 
     const getListFilterCurrency = async () => {
       setSearchCurrencyLoad(true);
       const currencyFilter = currencyData.filter((el: any) => {
-        return el.currency
-          .toLowerCase()
-          .match(searchCurrency.toLowerCase());
+        return el.currency.toLowerCase().match(searchCurrency.toLowerCase());
       });
 
       await setFilteredCurrency(currencyFilter);
@@ -1793,8 +1481,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
         {
           headers: {
             authority: 'staging-qore-data-apple-202883.qore.dev',
-            'x-qore-engine-admin-secret':
-              'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
+            'x-qore-engine-admin-secret': 'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
           },
         }
       );
@@ -1883,18 +1570,12 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
       newPackage.forEach((el: any) => {
         numberOfPackage += Number(el.commodities.qty);
-        itemWeight +=
-          Number(el.commodities.weight) * Number(el.commodities.qty);
+        itemWeight += Number(el.commodities.weight) * Number(el.commodities.qty);
         dimensionsWeight +=
-          ((Number(el.commodities.length) *
-            Number(el.commodities.width) *
-            Number(el.commodities.height)) /
-            5000) *
+          ((Number(el.commodities.length) * Number(el.commodities.width) * Number(el.commodities.height)) / 5000) *
           Number(el.commodities.qty);
         if (currencyCode !== '') {
-          totalDeclareAmount +=
-            Number(el.commodities.declareValue.currencyAmount) *
-            Number(el.commodities.qty);
+          totalDeclareAmount += Number(el.commodities.declareValue.currencyAmount) * Number(el.commodities.qty);
           el.commodities.declareValue.currencyCode = currencyCode;
         }
       });
@@ -1909,22 +1590,11 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
       await setValidationNumberOfPackage(Number(numberOfPackage)); */
       await setAllPackage(newPackage);
 
-      const packageValidation = validatePackage(
-        packageType,
-        newPackage
-      );
-      setValidationNumberOfPackage(
-        Number(packageValidation?.validationNumberOfPackage)
-      );
-      setValidationTotalWeight(
-        Number(packageValidation?.totalWeight)
-      );
-      setValidationActualTotalWeight(
-        Number(packageValidation?.totalActualWeight)
-      );
-      setValidationTotalDeclareValue(
-        packageValidation?.validationTotalCoverAmount
-      );
+      const packageValidation = validatePackage(packageType, newPackage);
+      setValidationNumberOfPackage(Number(packageValidation?.validationNumberOfPackage));
+      setValidationTotalWeight(Number(packageValidation?.totalWeight));
+      setValidationActualTotalWeight(Number(packageValidation?.totalActualWeight));
+      setValidationTotalDeclareValue(packageValidation?.validationTotalCoverAmount);
     };
 
     const removePackage = async (val: any) => {
@@ -1944,18 +1614,12 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
       newPack.forEach((el: any) => {
         numberOfPackage += Number(el.commodities.qty);
-        itemWeight +=
-          Number(el.commodities.weight) * Number(el.commodities.qty);
+        itemWeight += Number(el.commodities.weight) * Number(el.commodities.qty);
         dimensionsWeight +=
-          ((Number(el.commodities.length) *
-            Number(el.commodities.width) *
-            Number(el.commodities.height)) /
-            5000) *
+          ((Number(el.commodities.length) * Number(el.commodities.width) * Number(el.commodities.height)) / 5000) *
           Number(el.commodities.qty);
         if (currencyCode !== '') {
-          totalDeclareAmount +=
-            Number(el.commodities.declareValue.currencyAmount) *
-            Number(el.commodities.qty);
+          totalDeclareAmount += Number(el.commodities.declareValue.currencyAmount) * Number(el.commodities.qty);
           el.commodities.declareValue.currencyCode = currencyCode;
         }
       });
@@ -1971,18 +1635,10 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
       await setAllPackage(newPack);
 
       const packageValidation = validatePackage(packageType, newPack);
-      setValidationNumberOfPackage(
-        Number(packageValidation?.validationNumberOfPackage)
-      );
-      setValidationTotalWeight(
-        Number(packageValidation?.totalWeight)
-      );
-      setValidationActualTotalWeight(
-        Number(packageValidation?.totalActualWeight)
-      );
-      setValidationTotalDeclareValue(
-        packageValidation?.validationTotalCoverAmount
-      );
+      setValidationNumberOfPackage(Number(packageValidation?.validationNumberOfPackage));
+      setValidationTotalWeight(Number(packageValidation?.totalWeight));
+      setValidationActualTotalWeight(Number(packageValidation?.totalActualWeight));
+      setValidationTotalDeclareValue(packageValidation?.validationTotalCoverAmount);
 
       animateNewContainer.onOpen();
       await setRemoveLoad(false);
@@ -1990,20 +1646,7 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
     const formatDateWithTime = (date: any) => {
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
       const dayName = days[date.getDay()];
       const day = date.getDate();
@@ -2063,24 +1706,17 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
         // );
 
         const getMultiRate = await client.project.axios.post(
-          `${server}/v1/action/api_crendential/get_rates/1`,
+          `https://urshipper-get-rates-ucf25a6gza-as.a.run.app`,
           { args: payload },
           {
             headers: {
               authority: 'staging-qore-data-apple-202883.qore.dev',
-              'x-qore-engine-admin-secret':
-                'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
+              'x-qore-engine-admin-secret': 'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
             },
           }
         );
 
-        // console.log('getDenoRow >>> ', getDenoRow);
-        console.log('getMultiRate >>> ', getMultiRate);
-
-        if (
-          getMultiRate?.data?.result?.response?.data?.errors?.length >
-          0
-        ) {
+        if (getMultiRate?.data?.result?.response?.data?.errors?.length > 0) {
           setShowRateLoading(false);
           throw getMultiRate?.data?.result?.response?.data?.errors;
         }
@@ -2094,19 +1730,15 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
         const rateData = getMultiRate?.data?.result;
 
+        console.log('rateData >>> ', rateData);
+
         for (let i = 0; i < rateData.length; i++) {
           const getDenoRow = rateData[i];
 
-          console.log('getDenoRow >>> ', getDenoRow);
-
           // TODO: here
-          if (
-            getDenoRow.dataFedex?.output?.rateReplyDetails?.length > 0
-          ) {
+          if (getDenoRow.dataFedex?.output?.rateReplyDetails?.length > 0) {
             setShowRateError([]);
-            const responseFedex =
-              getDenoRow.dataFedex.output.rateReplyDetails[0]
-                .ratedShipmentDetails[0];
+            const responseFedex = getDenoRow.dataFedex.output.rateReplyDetails[0].ratedShipmentDetails[0];
 
             const totalBaseCharge = responseFedex.totalBaseCharge;
 
@@ -2114,64 +1746,54 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
             let totalTaxes = 0;
             let totalDiscount = 0;
 
-            responseFedex.shipmentRateDetail.surCharges.forEach(
-              (el: any) => {
-                totalSurcharge += el.amount;
-              }
-            );
+            let { surCharges, taxes, freightDiscount, totalFreightDiscount } = responseFedex.shipmentRateDetail;
+            // const freightDiscount = responseFedex.shipmentRateDetail?.freightDiscount;
 
-            responseFedex.shipmentRateDetail.taxes.forEach(
-              (el: any) => {
-                totalSurcharge += el.amount;
-              }
-            );
+            console.log('freightDiscount >>> ', freightDiscount);
 
-            responseFedex.shipmentRateDetail.freightDiscount.forEach(
-              (el: any) => {
+            if (surCharges) {
+              surCharges.forEach((el: any) => {
                 totalSurcharge += el.amount;
-              }
-            );
+              });
+            }
 
-            const totalCharge =
-              totalBaseCharge +
-              totalSurcharge +
-              totalTaxes -
-              totalDiscount;
+            if (taxes) {
+              taxes.forEach((el: any) => {
+                totalTaxes += el.amount;
+              });
+            }
+
+            if (freightDiscount) {
+              freightDiscount.forEach((el: any) => {
+                totalDiscount += el.amount;
+              });
+            }
+
+            if (!freightDiscount && totalFreightDiscount) {
+              totalDiscount += totalFreightDiscount;
+            }
+
+            const totalCharge = totalBaseCharge + totalSurcharge + totalTaxes - totalDiscount;
+
+            console.log('totalCharge >>> ', totalCharge, responseFedex);
 
             const getTransitRate = await client.project.axios.post(
-              `${server}/v1/action/finance_management/transit_rate/1`,
-              {},
-              {
-                headers: {
-                  authority:
-                    'staging-qore-data-apple-202883.qore.dev',
-                  'x-qore-engine-admin-secret':
-                    'LPUFvfGKE6KscQt5DAYb2AtqZiUjm76Z',
-                },
-              }
+              `https://urshipper-get-rates-ucf25a6gza-as.a.run.app/transit-rate`
             );
+
+            console.log('getTransitRate >>> ', getTransitRate);
 
             const allTransitRate = getTransitRate.data.result;
             let allRate: any = [];
 
-            for (
-              let index = 0;
-              index < allTransitRate.length;
-              index++
-            ) {
+            for (let index = 0; index < allTransitRate.length; index++) {
               const el = allTransitRate[index];
-              const marked = Number(
-                totalCharge +
-                  (totalCharge * Number(el.percentage_shipping)) / 100
-              );
-              const discount =
-                Number(marked) * (Number(el.discount) / 100);
+              const marked = Number(totalCharge + (totalCharge * Number(el.percentage_shipping)) / 100);
+              const discount = Number(marked) * (Number(el.discount) / 100);
 
               const subTotal = Number(marked) - Number(discount);
 
-              const displayVAT = Number(
-                subTotal * (Number(el.percentage_vat) / 100)
-              );
+              const displayVAT = Number(subTotal * (Number(el.percentage_vat) / 100));
 
               const totalPrice = subTotal + displayVAT;
 
@@ -2181,17 +1803,11 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
               el.totalDiscount = discount;
               el.subTotal = subTotal;
               el.totalPrice = totalPrice;
+              el.label = getDenoRow.label;
 
-              if (
-                getDenoRow?.dataFedex?.output?.rateReplyDetails[0]
-                  ?.commit
-              ) {
-                let dateDeliv =
-                  getDenoRow?.dataFedex?.output?.rateReplyDetails[0]
-                    ?.commit?.dateDetail?.dayFormat;
-                el.elestimatedDeliv = formatDateWithTime(
-                  new Date(dateDeliv)
-                );
+              if (getDenoRow?.dataFedex?.output?.rateReplyDetails[0]?.commit) {
+                let dateDeliv = getDenoRow?.dataFedex?.output?.rateReplyDetails[0]?.commit?.dateDetail?.dayFormat;
+                el.elestimatedDeliv = formatDateWithTime(new Date(dateDeliv));
               }
 
               allRate.push(el);
@@ -2223,21 +1839,9 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
             <LoaderItem />
           </Box>
         ) : (
-          <Box
-            position={'relative'}
-            w={'100%'}
-            minW={'700px'}
-            maxW={'1000px'}
-            minHeight={'500px'}
-            pb={'40px'}
-          >
+          <Box position={'relative'} w={'100%'} minW={'700px'} maxW={'1000px'} minHeight={'500px'} pb={'40px'}>
             <SlideFade in={animateAddressBox.isOpen} offsetY="20px">
-              <Box
-                boxShadow={'lg'}
-                position={'relative'}
-                p={'20px'}
-                backgroundColor={'white'}
-              >
+              <Box boxShadow={'lg'} position={'relative'} p={'20px'} backgroundColor={'white'}>
                 {/* Recivicer Country + Zip Code  */}
                 <Box>
                   {/* Title */}
@@ -2253,18 +1857,11 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
                     Ship to
                   </Box>
 
-                  <Center
-                    flexWrap={'wrap'}
-                    justifyContent={'space-between'}
-                  >
+                  <Center flexWrap={'wrap'} justifyContent={'space-between'}>
                     {/* Received Country  */}
                     <Box w={'50%'} my={'5px'}>
                       <FormControl isRequired>
-                        <FormLabel
-                          fontWeight={600}
-                          ml={'10px'}
-                          mb={'10px'}
-                        >
+                        <FormLabel fontWeight={600} ml={'10px'} mb={'10px'}>
                           Country
                         </FormLabel>
                         <Stack spacing={3} px="10px">
@@ -2278,36 +1875,22 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
                               };
                             })}
                             onChange={(e) => {
-                              handleSelectedItemsChangeReceiverCountry(
-                                e?.value
-                              );
+                              handleSelectedItemsChangeReceiverCountry(e?.value);
                             }}
                             isClearable
                             styles={{
                               control: (baseStyles, state) => ({
                                 ...baseStyles,
-                                borderColor: state.isFocused
-                                  ? '#F5F5F5'
-                                  : '#F5F5F5',
+                                borderColor: state.isFocused ? '#F5F5F5' : '#F5F5F5',
                                 fontSize: '14px',
                                 fontWeight: 600,
                               }),
-                              option: (
-                                styles,
-                                {
-                                  data,
-                                  isDisabled,
-                                  isFocused,
-                                  isSelected,
-                                }
-                              ) => {
+                              option: (styles, { data, isDisabled, isFocused, isSelected }) => {
                                 return {
                                   ...styles,
                                   fontSize: '14px',
                                   fontWeight: 600,
-                                  backgroundColor: isFocused
-                                    ? 'rgba(253,228,217, .6)'
-                                    : '#FFFFFF',
+                                  backgroundColor: isFocused ? 'rgba(253,228,217, .6)' : '#FFFFFF',
                                 };
                               },
                             }}
@@ -2317,115 +1900,59 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
                     </Box>
 
                     {/* Received City */}
-                    {isCity && (
-                      <Box w={'50%'} my={'5px'} px={'10px'}>
-                        {cityData && cityData.length > 0 ? (
-                          <Box>
-                            <Stack direction="row" spacing={0}>
-                              <FormLabel ml={'10px'} mb={'10px'}>
-                                City
-                              </FormLabel>
-                              <Text color="red">*</Text>
-                            </Stack>
+                    <Box
+                      pointerEvents={isCity ? 'auto' : 'none'}
+                      opacity={isCity ? 1 : 0.5}
+                      w={'50%'}
+                      my={'5px'}
+                      px={'10px'}
+                    >
+                      {cityData && cityData.length > 0 ? (
+                        <Box>
+                          <Stack direction="row" spacing={0}>
+                            <FormLabel ml={'10px'} mb={'10px'}>
+                              City
+                            </FormLabel>
+                            <Text color="red">*</Text>
+                          </Stack>
 
-                            <ReactSelect
-                              options={filteredReceiverCity.map(
-                                (item) => {
-                                  return {
-                                    value: item,
-                                    label: item.city,
-                                  };
-                                }
-                              )}
-                              placeholder="Select City"
-                              onInputChange={(e) =>
-                                setSearchReceiverCity(e)
-                              }
-                              onChange={(e) =>
-                                handleSelectedItemsChangeReceiverCity(
-                                  e?.value
-                                )
-                              }
-                              isClearable
-                              styles={{
-                                control: (baseStyles, state) => ({
-                                  ...baseStyles,
-                                  borderColor: state.isFocused
-                                    ? '#F5F5F5'
-                                    : '#F5F5F5',
+                          <ReactSelect
+                            options={filteredReceiverCity.map((item) => {
+                              return {
+                                value: item,
+                                label: item.city,
+                              };
+                            })}
+                            placeholder="Select City"
+                            onInputChange={(e) => setSearchReceiverCity(e)}
+                            onChange={(e) => handleSelectedItemsChangeReceiverCity(e?.value)}
+                            isClearable
+                            styles={{
+                              control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                borderColor: state.isFocused ? '#F5F5F5' : '#F5F5F5',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                              }),
+                              option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                                return {
+                                  ...styles,
                                   fontSize: '14px',
                                   fontWeight: 600,
-                                }),
-                                option: (
-                                  styles,
-                                  {
-                                    data,
-                                    isDisabled,
-                                    isFocused,
-                                    isSelected,
-                                  }
-                                ) => {
-                                  return {
-                                    ...styles,
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    backgroundColor: isFocused
-                                      ? 'rgba(253,228,217, .6)'
-                                      : '#FFFFFF',
-                                  };
-                                },
-                              }}
-                            />
-                          </Box>
-                        ) : (
-                          <Box>
-                            <Stack spacing={3} px={'10px'}>
-                              <FormLabel mb={0}>City</FormLabel>
-                              <InputGroup>
-                                <InputRightElement
-                                  pointerEvents="none"
-                                  children={
-                                    <FaCity color="rgba(162, 162, 162, 1)" />
-                                  }
-                                />
-                                <Input
-                                  borderColor={'#F5F5F5'}
-                                  _placeholder={{
-                                    opacity: 1,
-                                    color: 'gray.500',
-                                  }}
-                                  _focus={{ outline: 'none' }}
-                                  placeholder="Fill City"
-                                  fontSize="12px"
-                                  onChange={(e: any) => {
-                                    setReceiverCity(e.target.value);
-                                  }}
-                                />
-                              </InputGroup>
-                            </Stack>
-                          </Box>
-                        )}
-                      </Box>
-                    )}
-
-                    {/* Received Zip Code */}
-                    {isZipCodeCountry && (
-                      <Box w={'50%'} my={'5px'}>
-                        <FormControl isRequired>
-                          <FormLabel
-                            fontWeight={600}
-                            ml={'10px'}
-                            mb={'10px'}
-                          >
-                            Postal Code
-                          </FormLabel>
+                                  backgroundColor: isFocused ? 'rgba(253,228,217, .6)' : '#FFFFFF',
+                                };
+                              },
+                            }}
+                          />
+                        </Box>
+                      ) : (
+                        <Box>
                           <Stack spacing={3} px={'10px'}>
+                            <FormLabel mb={0}>City</FormLabel>
                             <InputGroup>
                               <InputRightElement
                                 pointerEvents="none"
-                                children={
-                                  <BsSignpost color="rgba(162, 162, 162, 1)" />
-                                }
+                                children={<FaCity color="rgba(162, 162, 162, 1)" />}
                               />
                               <Input
                                 borderColor={'#F5F5F5'}
@@ -2434,17 +1961,52 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
                                   color: 'gray.500',
                                 }}
                                 _focus={{ outline: 'none' }}
-                                placeholder="Fill Zip Code"
-                                fontSize="14px"
+                                placeholder="Fill City"
+                                fontSize="12px"
                                 onChange={(e: any) => {
-                                  setReceiverZipCode(e.target.value);
+                                  setReceiverCity(e.target.value);
                                 }}
                               />
                             </InputGroup>
                           </Stack>
-                        </FormControl>
-                      </Box>
-                    )}
+                        </Box>
+                      )}
+                    </Box>
+
+                    {/* Received Zip Code */}
+                    <Box
+                      pointerEvents={isZipCodeCountry ? 'auto' : 'none'}
+                      opacity={isZipCodeCountry ? 1 : 0.5}
+                      w={'50%'}
+                      my={'5px'}
+                    >
+                      <FormControl isRequired>
+                        <FormLabel fontWeight={600} ml={'10px'} mb={'10px'}>
+                          Postal Code
+                        </FormLabel>
+                        <Stack spacing={3} px={'10px'}>
+                          <InputGroup>
+                            <InputRightElement
+                              pointerEvents="none"
+                              children={<BsSignpost color="rgba(162, 162, 162, 1)" />}
+                            />
+                            <Input
+                              borderColor={'#F5F5F5'}
+                              _placeholder={{
+                                opacity: 1,
+                                color: 'gray.500',
+                              }}
+                              _focus={{ outline: 'none' }}
+                              placeholder="Fill Zip Code"
+                              fontSize="14px"
+                              onChange={(e: any) => {
+                                setReceiverZipCode(e.target.value);
+                              }}
+                            />
+                          </InputGroup>
+                        </Stack>
+                      </FormControl>
+                    </Box>
                   </Center>
                 </Box>
 
@@ -2468,422 +2030,313 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
               msgErrorFedex.length > 0 &&
               msgErrorFedex.map((el: any, index: number) => {
                 return (
-                  <SlideFade
-                    key={index}
-                    in={animateErrorsBox.isOpen}
-                    offsetY="20px"
-                  >
-                    <Alert
-                      my={'20px'}
-                      boxShadow={'lg'}
-                      position={'relative'}
-                      p={'20px'}
-                      status="error"
-                    >
+                  <SlideFade key={index} in={animateErrorsBox.isOpen} offsetY="20px">
+                    <Alert my={'20px'} boxShadow={'lg'} position={'relative'} p={'20px'} status="error">
                       <AlertIcon />
-                      <AlertTitle>
-                        Oops, Something is Wrong!
-                      </AlertTitle>
-                      <AlertDescription>
-                        {el.message}
-                      </AlertDescription>
+                      <AlertTitle>Oops, Something is Wrong!</AlertTitle>
+                      <AlertDescription>{el.message}</AlertDescription>
                     </Alert>
                   </SlideFade>
                 );
               })}
 
             {/* New Package UI */}
-            {showRateButton && (
-              <Box
-                my={'20px'}
-                boxShadow={'lg'}
-                position={'relative'}
-                p={'20px'}
-                backgroundColor={'white'}
-              >
-                {/* Title */}
-                <Flex
-                  color={'rgb(23, 23, 23)'}
-                  w={'100%'}
-                  justifyContent={'space-between'}
-                  pb={'20px'}
-                >
-                  <Box fontSize={'18px'} fontWeight={600}>
-                    Package Details
-                  </Box>
-                </Flex>
 
-                {/* Information */}
-                <Box
-                  borderRadius={'lg'}
-                  background={'#f5f5f5'}
-                  p={'20px'}
-                >
-                  <HStack spacing={5}>
-                    <Center pl={'10px'}>
-                      <Icon
-                        color={'#5C5C5C'}
-                        fontSize={'40px'}
-                        as={BiSolidPackage}
-                      ></Icon>
-                    </Center>
-                    <Box fontWeight={600}>
-                      <Box>
-                        Shipping rate are calculated based on
-                        packaging type, weight, dimensions, insured
-                        value, and signature requirement.
-                      </Box>
-                      <Box>
-                        It's nignly recommended to provide the correct
-                        and accurate information. Ir not, vou may
-                        receive adjustment cnarges
-                      </Box>
-                    </Box>
-                  </HStack>
+            <Box
+              pointerEvents={showRateButton ? 'auto' : 'none'}
+              opacity={showRateButton ? 1 : 0.5}
+              my={'20px'}
+              boxShadow={'lg'}
+              position={'relative'}
+              p={'20px'}
+              backgroundColor={'white'}
+            >
+              {/* Title */}
+              <Flex color={'rgb(23, 23, 23)'} w={'100%'} justifyContent={'space-between'} pb={'20px'}>
+                <Box fontSize={'18px'} fontWeight={600}>
+                  Package Details
                 </Box>
+              </Flex>
 
-                {/* Select Package Type */}
-                <Box my={'10px'}>
-                  <HStack spacing={'20px'}>
-                    {/* Package Type */}
-                    <Box w={'30%'}>
-                      <FormControl isRequired>
-                        <FormLabel fontSize={'14px'} fontWeight={600}>
-                          {' '}
-                          Package{' '}
-                        </FormLabel>
-                        <ReactSelect
-                          placeholder="Select Packing Type"
-                          options={[
-                            {
-                              value: 'Your Packaging',
-                              label: 'Your Packaging',
-                            },
-                            { value: 'Pak', label: 'Pak' },
-                          ]}
-                          onChange={(e) => {
-                            setPackageType(e!.value);
-                          }}
-                          isClearable
-                          defaultValue={{
-                            value: 'YOUR_PACKAGING',
+              {/* Information */}
+              <Box borderRadius={'lg'} background={'#f5f5f5'} p={'20px'}>
+                <HStack spacing={5}>
+                  <Center pl={'10px'}>
+                    <Icon color={'#5C5C5C'} fontSize={'40px'} as={BiSolidPackage}></Icon>
+                  </Center>
+                  <Box fontWeight={600}>
+                    <Box>
+                      Shipping rate are calculated based on packaging type, weight, dimensions, insured value, and
+                      signature requirement.
+                    </Box>
+                    <Box>
+                      It's nignly recommended to provide the correct and accurate information. Ir not, vou may receive
+                      adjustment cnarges
+                    </Box>
+                  </Box>
+                </HStack>
+              </Box>
+
+              {/* Select Package Type */}
+              <Box my={'10px'}>
+                <HStack spacing={'20px'}>
+                  {/* Package Type */}
+                  <Box w={'30%'}>
+                    <FormControl isRequired>
+                      <FormLabel fontSize={'14px'} fontWeight={600}>
+                        {' '}
+                        Package{' '}
+                      </FormLabel>
+                      <ReactSelect
+                        placeholder="Select Packing Type"
+                        options={[
+                          {
+                            value: 'Your Packaging',
                             label: 'Your Packaging',
-                          }}
-                          styles={{
-                            control: (baseStyles, state) => ({
-                              ...baseStyles,
-                              borderColor: state.isFocused
-                                ? '#F5F5F5'
-                                : '#F5F5F5',
+                          },
+                          { value: 'Pak', label: 'Pak' },
+                        ]}
+                        onChange={(e) => {
+                          setPackageType(e!.value);
+                        }}
+                        isClearable
+                        defaultValue={{
+                          value: 'YOUR_PACKAGING',
+                          label: 'Your Packaging',
+                        }}
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            borderColor: state.isFocused ? '#F5F5F5' : '#F5F5F5',
+                            fontSize: '14px',
+                            fontWeight: 600,
+                          }),
+                          option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                            return {
+                              ...styles,
                               fontSize: '14px',
                               fontWeight: 600,
-                            }),
-                            option: (
-                              styles,
-                              {
-                                data,
-                                isDisabled,
-                                isFocused,
-                                isSelected,
-                              }
-                            ) => {
-                              return {
-                                ...styles,
-                                fontSize: '14px',
-                                fontWeight: 600,
-                                backgroundColor: isFocused
-                                  ? 'rgba(253,228,217, .6)'
-                                  : '#FFFFFF',
-                              };
-                            },
-                          }}
-                        />
-                      </FormControl>
-                    </Box>
-
-                    {/* <Box w={"25%"}></Box> */}
-
-                    {/* Insurance & Signature */}
-                    <Stack pt={'25px'} spacing={0} direction="column">
-                      <Checkbox
-                        onChange={(e: any) => {
-                          if (e.target.checked) {
-                            setIsDeclareValue('Yes');
-                          } else {
-                            setIsDeclareValue('No');
-                          }
+                              backgroundColor: isFocused ? 'rgba(253,228,217, .6)' : '#FFFFFF',
+                            };
+                          },
                         }}
-                        isChecked={
-                          isDeclareValue === 'Yes' ? true : false
-                        }
-                        style={{
-                          borderColor: 'rgb(246,75,6)',
-                        }}
-                        fontWeight={600}
-                        size={'sm'}
-                        colorScheme="orange"
-                      >
-                        Add insurance for extra coverage
-                      </Checkbox>
-                      <Checkbox
-                        onChange={(e: any) => {
-                          if (e.target.checked) {
-                            handleSelectChange({
-                              is_declare_value: 'Direct Signature',
-                            });
-                          } else {
-                            handleSelectChange({
-                              is_declare_value: 'None',
-                            });
-                          }
-                        }}
-                        isChecked={
-                          signature === 'Direct Signature'
-                            ? true
-                            : false
-                        }
-                        style={{
-                          borderColor: 'rgb(246,75,6)',
-                        }}
-                        fontWeight={600}
-                        size={'sm'}
-                        colorScheme="orange"
-                        defaultChecked
-                      >
-                        Require a signature on delivery
-                      </Checkbox>
-                    </Stack>
-                  </HStack>
-                </Box>
-
-                {/* Currency */}
-                <Box my={'10px'}>
-                  {isDeclareValue &&
-                    currencyData &&
-                    currencyData.length > 0 && (
-                      <Box w={'30%'}>
-                        <FormControl isRequired>
-                          <FormLabel
-                            fontSize={'14px'}
-                            fontWeight={600}
-                          >
-                            {' '}
-                            Currency{' '}
-                          </FormLabel>
-                          <ReactSelect
-                            placeholder="Select Currency"
-                            options={currencyData.map((item) => {
-                              return {
-                                value: item,
-                                label: `${item.code} - ${item.currency}`,
-                              };
-                            })}
-                            onChange={(e) => {
-                              handleSelectedItemsChangeCurrency(
-                                e?.value
-                              );
-                            }}
-                            isClearable
-                            defaultValue={{
-                              label: 'USD - United States Dollar',
-                              value: {
-                                code: 'USD',
-                                currency: 'United States Dollar',
-                              },
-                            }}
-                            styles={{
-                              control: (baseStyles, state) => ({
-                                ...baseStyles,
-                                borderColor: state.isFocused
-                                  ? '#F5F5F5'
-                                  : '#F5F5F5',
-                                fontSize: '14px',
-                                fontWeight: 600,
-                              }),
-                              option: (
-                                styles,
-                                {
-                                  data,
-                                  isDisabled,
-                                  isFocused,
-                                  isSelected,
-                                }
-                              ) => {
-                                return {
-                                  ...styles,
-                                  fontSize: '14px',
-                                  fontWeight: 600,
-                                  backgroundColor: isFocused
-                                    ? 'rgba(253,228,217, .6)'
-                                    : '#FFFFFF',
-                                };
-                              },
-                            }}
-                          />
-                        </FormControl>
-                      </Box>
-                    )}
-                </Box>
-
-                <Box my={'30px'}>
-                  {animateCoverBox.isOpen && (
-                    <SlideFade
-                      in={animateContainerBox.isOpen}
-                      offsetY="20px"
-                    >
-                      {allPackage &&
-                        allPackage.length > 0 &&
-                        allPackage.map(
-                          (el: any, indexAllPackage: number) => {
-                            return (
-                              <Box
-                                key={indexAllPackage}
-                                my={'20px'}
-                                position={'relative'}
-                                p={'20px'}
-                                backgroundColor={'white'}
-                                border={'2px'}
-                                borderRadius={'10px'}
-                                borderColor="#d9d9d9"
-                                boxShadow={'lg'}
-                              >
-                                <YourPackagingData
-                                  setValidationTotalDeclareValue={
-                                    setValidationTotalDeclareValue
-                                  }
-                                  setValidationTotalWeight={
-                                    setValidationTotalWeight
-                                  }
-                                  setValidationNumberOfPackage={
-                                    setValidationNumberOfPackage
-                                  }
-                                  animateNewContainer={
-                                    animateNewContainer
-                                  }
-                                  removeLoad={removeLoad}
-                                  removePackage={removePackage}
-                                  setAllPackage={setAllPackage}
-                                  allPackage={allPackage}
-                                  packageData={el}
-                                  index={indexAllPackage}
-                                  currency={currencyCode}
-                                  cover={isDeclareValue}
-                                  setValidationActualTotalWeight={
-                                    setValidationActualTotalWeight
-                                  }
-                                  packageType={packageType}
-                                />
-                              </Box>
-                            );
-                          }
-                        )}
-                      <Box px={'5px'}>
-                        <Flex justifyContent={'end'}>
-                          <Box my={'10px'} fontWeight={600}>
-                            <Button
-                              fontSize={'14px'}
-                              color={'#FF4C02'}
-                              backgroundColor={'#ffffff'}
-                              _focus={{ outline: 'none' }}
-                              _hover={{
-                                backgroundColor: '#f7e9e9',
-                              }}
-                              onClick={newYourPackaging}
-                              border={'1px'}
-                              borderColor={'FF4C02'}
-                              m={0}
-                              h={'14px'}
-                              py={'14px'}
-                              px={'10px'}
-                              leftIcon={
-                                <BiPlus
-                                  fontSize={'20px'}
-                                  color={'#FF4C02'}
-                                />
-                              }
-                            >
-                              Add Package
-                            </Button>
-                          </Box>
-                        </Flex>
-                      </Box>
-                    </SlideFade>
-                  )}
-                </Box>
-
-                <Box my={'10px'}>
-                  {/* Total Packages & Weight */}
-                  {animateCoverBox.isOpen &&
-                  validationNumberOfPackage &&
-                  validationNumberOfPackage !== 0 ? (
-                    <Box
-                      backgroundColor={'#fff'}
-                      my={'20px'}
-                      w={'100%'}
-                    >
-                      <Divider
-                        backgroundColor={'##d9d9d9ff'}
-                        size={'2px'}
                       />
-                      <Box
-                        fontSize={'16px'}
-                        mt={'12px'}
-                        mb={'24px'}
-                        fontWeight={600}
-                      >
-                        Package Summary:{' '}
-                      </Box>
-                      <HStack
-                        w={'100%'}
-                        spacing="20px"
-                        justifyContent={'start'}
-                        alignItems={'start'}
-                      >
-                        {/* Quantity */}
-                        <HStack>
-                          <Box>Total Packages: </Box>
-                          <Box fontWeight={600}>
-                            {validationNumberOfPackage} pcs
-                          </Box>
-                        </HStack>
+                    </FormControl>
+                  </Box>
 
-                        {/* Gross Weight */}
-                        {packageType !== 'Pak' && (
-                          <HStack>
-                            <Box>Gross Weight: </Box>
-                            <Box fontWeight={600}>
-                              {validationActualTotalWeight.toFixed(2)}{' '}
-                              kg
-                            </Box>
-                          </HStack>
-                        )}
+                  {/* <Box w={"25%"}></Box> */}
 
-                        {/* Chargeable Weight */}
-                        <HStack>
-                          <Box>Chargeable Weight: </Box>
-                          <Box fontWeight={600}>
-                            {validationTotalWeight.toFixed(2)} kg
-                          </Box>
-                        </HStack>
-
-                        {/* Insured Value */}
-                        {isDeclareValue === 'Yes' && (
-                          <HStack>
-                            <Box>Insured Value: </Box>
-                            <Box fontWeight={600}>
-                              {validationTotalDeclareValue}{' '}
-                              {currencyCode}
-                            </Box>
-                          </HStack>
-                        )}
-                      </HStack>
-                    </Box>
-                  ) : (
-                    <Box></Box>
-                  )}
-                </Box>
+                  {/* Insurance & Signature */}
+                  <Stack pt={'25px'} spacing={0} direction="column">
+                    <Checkbox
+                      onChange={(e: any) => {
+                        if (e.target.checked) {
+                          setIsDeclareValue('Yes');
+                        } else {
+                          setIsDeclareValue('No');
+                        }
+                      }}
+                      isChecked={isDeclareValue === 'Yes' ? true : false}
+                      style={{
+                        borderColor: 'rgb(246,75,6)',
+                      }}
+                      fontWeight={600}
+                      size={'sm'}
+                      colorScheme="orange"
+                    >
+                      Add insurance for extra coverage
+                    </Checkbox>
+                    <Checkbox
+                      onChange={(e: any) => {
+                        if (e.target.checked) {
+                          handleSelectChange({
+                            is_declare_value: 'Direct Signature',
+                          });
+                        } else {
+                          handleSelectChange({
+                            is_declare_value: 'None',
+                          });
+                        }
+                      }}
+                      isChecked={signature === 'Direct Signature' ? true : false}
+                      style={{
+                        borderColor: 'rgb(246,75,6)',
+                      }}
+                      fontWeight={600}
+                      size={'sm'}
+                      colorScheme="orange"
+                      defaultChecked
+                    >
+                      Require a signature on delivery
+                    </Checkbox>
+                  </Stack>
+                </HStack>
               </Box>
-            )}
+
+              {/* Currency */}
+              <Box my={'10px'}>
+                {isDeclareValue && currencyData && currencyData.length > 0 && (
+                  <Box w={'30%'}>
+                    <FormControl isRequired>
+                      <FormLabel fontSize={'14px'} fontWeight={600}>
+                        {' '}
+                        Currency{' '}
+                      </FormLabel>
+                      <ReactSelect
+                        placeholder="Select Currency"
+                        options={currencyData.map((item) => {
+                          return {
+                            value: item,
+                            label: `${item.code} - ${item.currency}`,
+                          };
+                        })}
+                        onChange={(e) => {
+                          handleSelectedItemsChangeCurrency(e?.value);
+                        }}
+                        isClearable
+                        defaultValue={{
+                          label: 'USD - United States Dollar',
+                          value: {
+                            code: 'USD',
+                            currency: 'United States Dollar',
+                          },
+                        }}
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            borderColor: state.isFocused ? '#F5F5F5' : '#F5F5F5',
+                            fontSize: '14px',
+                            fontWeight: 600,
+                          }),
+                          option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                            return {
+                              ...styles,
+                              fontSize: '14px',
+                              fontWeight: 600,
+                              backgroundColor: isFocused ? 'rgba(253,228,217, .6)' : '#FFFFFF',
+                            };
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                )}
+              </Box>
+
+              <Box my={'30px'}>
+                {/* {animateCoverBox.isOpen && ( */}
+                {/* <SlideFade
+                  in={animateContainerBox.isOpen}
+                  offsetY="20px"
+                > */}
+                {allPackage &&
+                  allPackage.length > 0 &&
+                  allPackage.map((el: any, indexAllPackage: number) => {
+                    return (
+                      <Box
+                        key={indexAllPackage}
+                        my={'20px'}
+                        position={'relative'}
+                        p={'20px'}
+                        backgroundColor={'white'}
+                        border={'2px'}
+                        borderRadius={'10px'}
+                        borderColor="#d9d9d9"
+                        boxShadow={'lg'}
+                      >
+                        <YourPackagingData
+                          setValidationTotalDeclareValue={setValidationTotalDeclareValue}
+                          setValidationTotalWeight={setValidationTotalWeight}
+                          setValidationNumberOfPackage={setValidationNumberOfPackage}
+                          animateNewContainer={animateNewContainer}
+                          removeLoad={removeLoad}
+                          removePackage={removePackage}
+                          setAllPackage={setAllPackage}
+                          allPackage={allPackage}
+                          packageData={el}
+                          index={indexAllPackage}
+                          currency={currencyCode}
+                          cover={isDeclareValue}
+                          setValidationActualTotalWeight={setValidationActualTotalWeight}
+                          packageType={packageType}
+                        />
+                      </Box>
+                    );
+                  })}
+                <Box px={'5px'}>
+                  <Flex justifyContent={'end'}>
+                    <Box my={'10px'} fontWeight={600}>
+                      <Button
+                        fontSize={'14px'}
+                        color={'#FF4C02'}
+                        backgroundColor={'#ffffff'}
+                        _focus={{ outline: 'none' }}
+                        _hover={{
+                          backgroundColor: '#f7e9e9',
+                        }}
+                        onClick={newYourPackaging}
+                        border={'1px'}
+                        borderColor={'FF4C02'}
+                        m={0}
+                        h={'14px'}
+                        py={'14px'}
+                        px={'10px'}
+                        leftIcon={<BiPlus fontSize={'20px'} color={'#FF4C02'} />}
+                      >
+                        Add Package
+                      </Button>
+                    </Box>
+                  </Flex>
+                </Box>
+                {/* </SlideFade> */}
+                {/* )} */}
+              </Box>
+
+              <Box my={'10px'}>
+                {/* Total Packages & Weight */}
+                {animateCoverBox.isOpen && validationNumberOfPackage && validationNumberOfPackage !== 0 ? (
+                  <Box backgroundColor={'#fff'} my={'20px'} w={'100%'}>
+                    <Divider backgroundColor={'##d9d9d9ff'} size={'2px'} />
+                    <Box fontSize={'16px'} mt={'12px'} mb={'24px'} fontWeight={600}>
+                      Package Summary:{' '}
+                    </Box>
+                    <HStack w={'100%'} spacing="20px" justifyContent={'start'} alignItems={'start'}>
+                      {/* Quantity */}
+                      <HStack>
+                        <Box>Total Packages: </Box>
+                        <Box fontWeight={600}>{validationNumberOfPackage} pcs</Box>
+                      </HStack>
+
+                      {/* Gross Weight */}
+                      {packageType !== 'Pak' && (
+                        <HStack>
+                          <Box>Gross Weight: </Box>
+                          <Box fontWeight={600}>{validationActualTotalWeight.toFixed(2)} kg</Box>
+                        </HStack>
+                      )}
+
+                      {/* Chargeable Weight */}
+                      <HStack>
+                        <Box>Chargeable Weight: </Box>
+                        <Box fontWeight={600}>{validationTotalWeight.toFixed(2)} kg</Box>
+                      </HStack>
+
+                      {/* Insured Value */}
+                      {isDeclareValue === 'Yes' && (
+                        <HStack>
+                          <Box>Insured Value: </Box>
+                          <Box fontWeight={600}>
+                            {validationTotalDeclareValue} {currencyCode}
+                          </Box>
+                        </HStack>
+                      )}
+                    </HStack>
+                  </Box>
+                ) : (
+                  <Box></Box>
+                )}
+              </Box>
+            </Box>
 
             {/* Show Rate Error */}
             {showRateError && showRateError.length > 0 && (
@@ -2904,20 +2357,19 @@ const ShippingRate = registerComponent('shipping-ratev3-2', {
 
             {/* Rate Results */}
             {
-              <Box>
-                {!boxIsLoading &&
-                  receiverCountryCode &&
-                  membershipPlan.length > 0 && (
-                    <AllRateTab
-                      showRateButton={showRateButton}
-                      userMembership={userMembership}
-                      membershipPlan={membershipPlan}
-                      action={jumpToPage}
-                      loading={showRateLoading}
-                      getRate={getRate}
-                      urshipperRate={urshipperRate}
-                    />
-                  )}
+              <Box
+                pointerEvents={!boxIsLoading && receiverCountryCode && membershipPlan.length > 0 ? 'auto' : 'none'}
+                opacity={!boxIsLoading && receiverCountryCode && membershipPlan.length > 0 ? 1 : 0.5}
+              >
+                <AllRateTab
+                  showRateButton={showRateButton}
+                  userMembership={userMembership}
+                  membershipPlan={membershipPlan}
+                  action={jumpToPage}
+                  loading={showRateLoading}
+                  getRate={getRate}
+                  urshipperRate={urshipperRate}
+                />
               </Box>
             }
           </Box>
